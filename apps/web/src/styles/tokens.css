@@ -1,0 +1,21 @@
+:root {
+  color: #514659;
+  background: #fff9f2;
+  font-family: Nunito, ui-rounded, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-synthesis: none;
+  --color-cream: #fff9f2;
+  --color-peach: #f5b8b2;
+  --color-peach-strong: #c96f6a;
+  --color-milk-blue: #cfe7f5;
+  --color-lavender: #ddd4f4;
+  --color-ink: #514659;
+  --color-muted: #786d7e;
+  --color-success: #b9dfcb;
+  --color-gentle-error: #f2ceb4;
+  --color-white: #fffefd;
+  --radius-card: 24px;
+  --radius-button: 18px;
+  --touch-min: 48px;
+  --control-primary-height: 52px;
+  --shadow-soft: 0 10px 28px rgb(81 70 89 / 10%);
+}

@@ -7,6 +7,10 @@
     "dev:web": "pnpm --filter @coucoumeow/web dev",
     "test:web": "pnpm --filter @coucoumeow/web test",
     "typecheck:web": "pnpm --filter @coucoumeow/web typecheck",
-    "build:web": "pnpm --filter @coucoumeow/web build"
+    "build:web": "pnpm --filter @coucoumeow/web build",
+    "generate:api": "bash scripts/generate-api-client.sh"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.10.1"
   }
 }

@@ -10,6 +10,8 @@
     "build": "tsc -b && vite build"
   },
   "dependencies": {
+    "@coucoumeow/api-client": "workspace:*",
+    "lucide-react": "^0.544.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
