@@ -1,6 +1,6 @@
 begin;
 
-select plan(16);
+select plan(24);
 
 insert into auth.users (
   id,
@@ -166,6 +166,7 @@ insert into public.practice_attempts (
   id,
   session_id,
   user_id,
+  item_type,
   vocab_id,
   expected_answer,
   user_answer,
@@ -175,6 +176,7 @@ insert into public.practice_attempts (
     '62000000-0000-0000-0000-000000000001',
     '61000000-0000-0000-0000-000000000001',
     '10000000-0000-0000-0000-000000000001',
+    'vocab',
     '52000000-0000-0000-0000-000000000001',
     'sunbeam',
     'sunbeam',
@@ -184,6 +186,7 @@ insert into public.practice_attempts (
     '62000000-0000-0000-0000-000000000002',
     '61000000-0000-0000-0000-000000000002',
     '20000000-0000-0000-0000-000000000002',
+    'vocab',
     '52000000-0000-0000-0000-000000000001',
     'sunbeam',
     'sun',
@@ -209,22 +212,165 @@ select set_config(
   true
 );
 
-select is((select count(*) from public.lf_episodes), 1::bigint,
-  'authenticated users see only published episodes');
-select is((select count(*) from public.lf_sentences), 1::bigint,
-  'sentence visibility follows the published parent');
-select is((select count(*) from public.lf_vocab), 1::bigint,
-  'vocabulary visibility follows the published parent');
-select is((select count(*) from public.lf_knowledge), 1::bigint,
-  'knowledge visibility follows the published parent');
-select is((select count(*) from public.profiles), 1::bigint,
-  'users see only their own profile');
-select is((select count(*) from public.practice_sessions), 1::bigint,
-  'users see only their own sessions');
-select is((select count(*) from public.practice_attempts), 1::bigint,
-  'attempt rows cannot cross session owners');
-select is((select count(*) from public.mistake_items), 1::bigint,
-  'users see only their own mistakes');
+select is(
+  (
+    select array_agg(title order by title)
+    from public.lf_episodes
+    where id in (
+      '30000000-0000-0000-0000-000000000003',
+      '40000000-0000-0000-0000-000000000004'
+    )
+  ),
+  array['Published Test Story']::text[],
+  'exact published fixture title set'
+);
+select ok(
+  not exists (
+    select 1 from public.lf_episodes
+    where id = '40000000-0000-0000-0000-000000000004'
+  ),
+  'draft episode fixture is absent'
+);
+
+select is(
+  (
+    select array_agg(id::text order by id)
+    from public.lf_sentences
+    where id in (
+      '51000000-0000-0000-0000-000000000001',
+      '51000000-0000-0000-0000-000000000002'
+    )
+  ),
+  array['51000000-0000-0000-0000-000000000001']::text[],
+  'exact sentence fixture visibility follows the published parent'
+);
+select ok(
+  not exists (
+    select 1 from public.lf_sentences
+    where id = '51000000-0000-0000-0000-000000000002'
+  ),
+  'draft sentence fixture is absent'
+);
+
+select is(
+  (
+    select array_agg(id::text order by id)
+    from public.lf_vocab
+    where id in (
+      '52000000-0000-0000-0000-000000000001',
+      '52000000-0000-0000-0000-000000000002'
+    )
+  ),
+  array['52000000-0000-0000-0000-000000000001']::text[],
+  'exact vocabulary fixture visibility follows the published parent'
+);
+select ok(
+  not exists (
+    select 1 from public.lf_vocab
+    where id = '52000000-0000-0000-0000-000000000002'
+  ),
+  'draft vocabulary fixture is absent'
+);
+
+select is(
+  (
+    select array_agg(id::text order by id)
+    from public.lf_knowledge
+    where id in (
+      '53000000-0000-0000-0000-000000000001',
+      '53000000-0000-0000-0000-000000000002'
+    )
+  ),
+  array['53000000-0000-0000-0000-000000000001']::text[],
+  'exact knowledge fixture visibility follows the published parent'
+);
+select ok(
+  not exists (
+    select 1 from public.lf_knowledge
+    where id = '53000000-0000-0000-0000-000000000002'
+  ),
+  'draft knowledge fixture is absent'
+);
+
+select is(
+  (
+    select array_agg(id::text order by id)
+    from public.profiles
+    where id in (
+      '10000000-0000-0000-0000-000000000001',
+      '20000000-0000-0000-0000-000000000002'
+    )
+  ),
+  array['10000000-0000-0000-0000-000000000001']::text[],
+  'exact own-profile fixture set'
+);
+select ok(
+  not exists (
+    select 1 from public.profiles
+    where id = '20000000-0000-0000-0000-000000000002'
+  ),
+  'other-user profile fixture is absent'
+);
+
+select is(
+  (
+    select array_agg(id::text order by id)
+    from public.practice_sessions
+    where id in (
+      '61000000-0000-0000-0000-000000000001',
+      '61000000-0000-0000-0000-000000000002'
+    )
+  ),
+  array['61000000-0000-0000-0000-000000000001']::text[],
+  'exact own-session fixture set'
+);
+select ok(
+  not exists (
+    select 1 from public.practice_sessions
+    where id = '61000000-0000-0000-0000-000000000002'
+  ),
+  'other-user session fixture is absent'
+);
+
+select is(
+  (
+    select array_agg(id::text order by id)
+    from public.practice_attempts
+    where id in (
+      '62000000-0000-0000-0000-000000000001',
+      '62000000-0000-0000-0000-000000000002'
+    )
+  ),
+  array['62000000-0000-0000-0000-000000000001']::text[],
+  'exact own-attempt fixture set proves attempt rows cannot cross session owners'
+);
+select ok(
+  not exists (
+    select 1 from public.practice_attempts
+    where id = '62000000-0000-0000-0000-000000000002'
+  ),
+  'other-user attempt fixture is absent'
+);
+
+select is(
+  (
+    select array_agg(user_id::text order by user_id)
+    from public.mistake_items
+    where user_id in (
+      '10000000-0000-0000-0000-000000000001',
+      '20000000-0000-0000-0000-000000000002'
+    )
+  ),
+  array['10000000-0000-0000-0000-000000000001']::text[],
+  'exact own-mistake fixture set'
+);
+select ok(
+  not exists (
+    select 1 from public.mistake_items
+    where user_id = '20000000-0000-0000-0000-000000000002'
+  ),
+  'other-user mistake fixture is absent'
+);
 
 select lives_ok(
   $$update public.profiles set child_display_name = 'Child A Updated'$$,

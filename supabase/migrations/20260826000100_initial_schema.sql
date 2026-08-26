@@ -92,8 +92,9 @@ create table public.practice_attempts (
   id uuid primary key default gen_random_uuid(),
   session_id uuid not null,
   user_id uuid not null references auth.users(id) on delete cascade,
-  vocab_id uuid references public.lf_vocab(id),
-  sentence_id uuid references public.lf_sentences(id),
+  item_type public.mistake_type not null,
+  vocab_id uuid references public.lf_vocab(id) on delete set null,
+  sentence_id uuid references public.lf_sentences(id) on delete set null,
   expected_answer text not null check (length(btrim(expected_answer)) > 0),
   user_answer text,
   speech_transcript text,
@@ -105,7 +106,11 @@ create table public.practice_attempts (
   foreign key (session_id, user_id)
     references public.practice_sessions(id, user_id)
     on delete cascade,
-  check ((vocab_id is not null)::integer + (sentence_id is not null)::integer = 1),
+  check (
+    (item_type = 'vocab' and sentence_id is null)
+    or
+    (item_type = 'sentence' and vocab_id is null)
+  ),
   check (corrected_is_correct is null or length(btrim(correction_reason)) > 0)
 );
 
@@ -174,6 +179,119 @@ create index content_import_jobs_run_id_idx on public.content_import_jobs(run_id
 create index content_import_jobs_hash_idx on public.content_import_jobs(content_hash);
 create index content_import_jobs_status_idx
   on public.content_import_jobs(status, created_at);
+
+create or replace function public.validate_practice_attempt_item()
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+declare
+  v_session_episode_id uuid;
+  v_item_episode_id uuid;
+  v_item_count smallint;
+begin
+  v_item_count :=
+    (new.vocab_id is not null)::integer
+    + (new.sentence_id is not null)::integer;
+
+  if tg_op = 'INSERT' and v_item_count <> 1 then
+    raise exception 'new practice attempts require exactly one content item'
+      using errcode = '23514';
+  end if;
+
+  if v_item_count = 0 then
+    if tg_op = 'UPDATE'
+      and old.vocab_id is not null
+      and exists (select 1 from public.lf_vocab where id = old.vocab_id)
+    then
+      raise exception 'a live vocabulary reference cannot be detached'
+        using errcode = '23514';
+    end if;
+
+    if tg_op = 'UPDATE'
+      and old.sentence_id is not null
+      and exists (select 1 from public.lf_sentences where id = old.sentence_id)
+    then
+      raise exception 'a live sentence reference cannot be detached'
+        using errcode = '23514';
+    end if;
+
+    if tg_op = 'UPDATE'
+      and old.vocab_id is null
+      and old.sentence_id is null
+      and new.item_type <> old.item_type
+    then
+      raise exception 'historical attempt item_type cannot be changed'
+        using errcode = '23514';
+    end if;
+
+    -- The FK action can now detach the deleted item while preserving kind and
+    -- the expected/user/transcript snapshots on the historical attempt row.
+    return new;
+  end if;
+
+  if v_item_count <> 1 then
+    raise exception 'practice attempts may reference only one content item'
+      using errcode = '23514';
+  end if;
+
+  select episode_id
+  into v_session_episode_id
+  from public.practice_sessions
+  where id = new.session_id
+    and user_id = new.user_id;
+
+  if not found then
+    raise exception 'practice session does not exist for this user'
+      using errcode = '23503';
+  end if;
+
+  if new.vocab_id is not null then
+    if new.item_type <> 'vocab' then
+      raise exception 'item_type must be vocab for a vocabulary reference'
+        using errcode = '23514';
+    end if;
+
+    select episode_id
+    into v_item_episode_id
+    from public.lf_vocab
+    where id = new.vocab_id;
+  else
+    if new.item_type <> 'sentence' then
+      raise exception 'item_type must be sentence for a sentence reference'
+        using errcode = '23514';
+    end if;
+
+    select episode_id
+    into v_item_episode_id
+    from public.lf_sentences
+    where id = new.sentence_id;
+  end if;
+
+  if v_item_episode_id is null then
+    raise exception 'practice content item does not exist'
+      using errcode = '23503';
+  end if;
+
+  if v_item_episode_id <> v_session_episode_id then
+    raise exception 'practice content item must belong to the session episode'
+      using errcode = '23514';
+  end if;
+
+  return new;
+end;
+$$;
+
+create trigger validate_practice_attempt_item
+before insert or update of session_id, user_id, item_type, vocab_id, sentence_id
+on public.practice_attempts
+for each row
+execute function public.validate_practice_attempt_item();
+
+revoke all on function public.validate_practice_attempt_item() from public;
+revoke all on function public.validate_practice_attempt_item()
+  from anon, authenticated;
 
 create or replace function public.replace_episode_content(
   p_episode_id uuid,

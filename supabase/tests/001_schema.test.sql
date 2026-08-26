@@ -1,6 +1,6 @@
 begin;
 
-select plan(21);
+select plan(27);
 
 select has_table('public', 'lf_episodes');
 select has_table('public', 'lf_sentences');
@@ -55,15 +55,75 @@ insert into public.lf_episodes (
 );
 
 insert into public.lf_sentences (
+  id,
   episode_id,
   sequence_no,
   english_text,
   chinese_translation
 ) values (
+  '91000000-0000-0000-0000-000000000009',
   '90000000-0000-0000-0000-000000000009',
   1,
   'Original sentence.',
   '原始句子。'
+);
+
+insert into auth.users (
+  id,
+  aud,
+  role,
+  email,
+  raw_app_meta_data,
+  raw_user_meta_data,
+  created_at,
+  updated_at
+) values (
+  '92000000-0000-0000-0000-000000000009',
+  'authenticated',
+  'authenticated',
+  'attempt-history@example.test',
+  '{}',
+  '{}',
+  now(),
+  now()
+);
+
+insert into public.practice_sessions (
+  id,
+  user_id,
+  episode_id,
+  practice_type,
+  question_count,
+  correct_count
+) values (
+  '93000000-0000-0000-0000-000000000009',
+  '92000000-0000-0000-0000-000000000009',
+  '90000000-0000-0000-0000-000000000009',
+  'sentence_reading',
+  1,
+  1
+);
+
+insert into public.practice_attempts (
+  id,
+  session_id,
+  user_id,
+  item_type,
+  sentence_id,
+  expected_answer,
+  user_answer,
+  speech_transcript,
+  original_is_correct
+) values (
+  '94000000-0000-0000-0000-000000000009',
+  '93000000-0000-0000-0000-000000000009',
+  '92000000-0000-0000-0000-000000000009',
+  'sentence',
+  '91000000-0000-0000-0000-000000000009',
+  'Original sentence.',
+  'Original sentence.',
+  'Original transcript.',
+  true
 );
 
 select lives_ok(
@@ -89,6 +149,107 @@ select is(
    where episode_id = '90000000-0000-0000-0000-000000000009'),
   1::bigint,
   'replacement creates the requested sentence set'
+);
+select is(
+  (select count(*) from public.practice_attempts
+   where id = '94000000-0000-0000-0000-000000000009'),
+  1::bigint,
+  'replacement retains historical attempts'
+);
+select is(
+  (select sentence_id from public.practice_attempts
+   where id = '94000000-0000-0000-0000-000000000009'),
+  null::uuid,
+  'replacement detaches a deleted sentence reference'
+);
+select is(
+  (select item_type::text from public.practice_attempts
+   where id = '94000000-0000-0000-0000-000000000009'),
+  'sentence',
+  'replacement preserves the historical item kind'
+);
+select is(
+  (select concat_ws('|', expected_answer, user_answer, speech_transcript)
+   from public.practice_attempts
+   where id = '94000000-0000-0000-0000-000000000009'),
+  'Original sentence.|Original sentence.|Original transcript.',
+  'replacement preserves historical attempt snapshots'
+);
+
+insert into public.lf_episodes (
+  id,
+  level,
+  title,
+  local_video_filename,
+  local_srt_filename,
+  content_hash
+) values (
+  '95000000-0000-0000-0000-000000000009',
+  1,
+  'Other Episode',
+  'other-episode.mp4',
+  'other-episode.srt',
+  'other-episode-hash'
+);
+
+insert into public.lf_vocab (
+  id,
+  episode_id,
+  word,
+  phonetic,
+  chinese_meaning,
+  sequence_no
+) values (
+  '96000000-0000-0000-0000-000000000009',
+  '95000000-0000-0000-0000-000000000009',
+  'other',
+  '/ˈʌðər/',
+  '其他的',
+  1
+);
+
+select throws_ok(
+  $$
+    insert into public.practice_attempts (
+      session_id,
+      user_id,
+      item_type,
+      vocab_id,
+      expected_answer,
+      original_is_correct
+    ) values (
+      '93000000-0000-0000-0000-000000000009',
+      '92000000-0000-0000-0000-000000000009',
+      'vocab',
+      '96000000-0000-0000-0000-000000000009',
+      'other',
+      false
+    )
+  $$,
+  '23514',
+  null,
+  'attempt item must belong to the session episode'
+);
+
+select throws_ok(
+  $$
+    insert into public.practice_attempts (
+      session_id,
+      user_id,
+      item_type,
+      expected_answer,
+      original_is_correct
+    ) values (
+      '93000000-0000-0000-0000-000000000009',
+      '92000000-0000-0000-0000-000000000009',
+      'sentence',
+      'Missing item.',
+      false
+    )
+  $$,
+  '23514',
+  null,
+  'new attempts require exactly one content item'
 );
 
 do $$

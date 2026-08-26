@@ -71,10 +71,8 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assert_sql("normalized_word text generated always as (lower(btrim(word))) stored")
         self.assert_sql("unique (episode_id, normalized_word)")
         self.assert_sql("foreign key (session_id, user_id) references public.practice_sessions(id, user_id)")
-        self.assert_sql(
-            "check ((vocab_id is not null)::integer + "
-            "(sentence_id is not null)::integer = 1)"
-        )
+        self.assert_sql("item_type = 'vocab' and sentence_id is null")
+        self.assert_sql("item_type = 'sentence' and vocab_id is null")
         self.assert_sql("create unique index mistake_items_user_vocab_uidx")
         self.assert_sql("create unique index mistake_items_user_sentence_uidx")
         self.assert_sql("create index practice_attempts_session_idx")
@@ -97,6 +95,39 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assert_sql(f"revoke all on function {signature} from anon, authenticated")
         self.assert_sql(f"grant execute on function {signature} to service_role")
         self.assertIn("replacement is atomic when a child insert fails", SCHEMA_TEST.lower())
+
+    def test_attempt_history_survives_replacement_and_new_items_match_session_episode(self) -> None:
+        self.assertEqual(self.migration.count("on delete set null"), 2)
+        self.assert_sql("item_type public.mistake_type not null")
+        self.assert_sql("create or replace function public.validate_practice_attempt_item")
+        self.assert_sql("create trigger validate_practice_attempt_item")
+        self.assert_sql("tg_op = 'insert' and v_item_count <> 1")
+        self.assert_sql("where id = new.session_id and user_id = new.user_id")
+        self.assert_sql("from public.lf_vocab where id = new.vocab_id")
+        self.assert_sql("from public.lf_sentences where id = new.sentence_id")
+        self.assert_sql("v_item_episode_id <> v_session_episode_id")
+        self.assertIn("replacement preserves historical attempt snapshots", SCHEMA_TEST.lower())
+        self.assertIn("attempt item must belong to the session episode", SCHEMA_TEST.lower())
+        self.assertIn("new attempts require exactly one content item", SCHEMA_TEST.lower())
+
+    def test_replace_function_has_exactly_the_public_contract_signature(self) -> None:
+        declaration = re.search(
+            r"create or replace function public\.replace_episode_content\((.*?)\) "
+            r"returns void",
+            self.migration,
+        )
+        self.assertIsNotNone(declaration)
+        parameters = [part.strip() for part in declaration.group(1).split(",")]
+        self.assertEqual(
+            parameters,
+            [
+                "p_episode_id uuid",
+                "p_content_hash text",
+                "p_sentences jsonb",
+                "p_vocab jsonb",
+                "p_knowledge jsonb",
+            ],
+        )
 
     def test_rls_policies_cover_parent_publication_and_owner_isolation(self) -> None:
         all_tables = (
@@ -155,6 +186,12 @@ class SupabaseStaticContractTest(unittest.TestCase):
         )
         self.assertIn("attempt rows cannot cross session owners", RLS_TEST.lower())
         self.assertIn("visibility follows the published parent", RLS_TEST.lower())
+        self.assertNotIn("select count(*) from public.", RLS_TEST.lower())
+        self.assertGreaterEqual(RLS_TEST.lower().count("select array_agg("), 8)
+        self.assertGreaterEqual(RLS_TEST.lower().count("not exists ("), 8)
+        self.assertIn("exact published fixture title set", RLS_TEST.lower())
+        self.assertIn("draft episode fixture is absent", RLS_TEST.lower())
+        self.assertIn("other-user attempt fixture is absent", RLS_TEST.lower())
 
     def test_seed_is_one_fictional_episode_without_real_paths_or_source_text(self) -> None:
         self.assertTrue(SEED_PATH.is_file(), "supabase/seed.sql must exist")
