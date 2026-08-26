@@ -106,8 +106,8 @@ _episode = EpisodeDetail(
         Sentence(id="sentence-3", english="Let's walk together.", chinese="让我们一起走吧。"),
     ],
     vocab=[
-        Vocab(id="vocab-kitten", word="kitten", phonetic="/ˈkɪtən/", meaning="小猫"),
-        Vocab(id="vocab-little", word="little", phonetic="/ˈlɪtəl/", meaning="小的；年幼的"),
+        Vocab(id="vocab-kitten", word="kitten", phonetic="/ˈkɪt.ən/", meaning="小猫"),
+        Vocab(id="vocab-little", word="little", phonetic="/ˈlɪt.əl/", meaning="小的；年幼的"),
         Vocab(id="vocab-home", word="home", phonetic="/həʊm/", meaning="家"),
         Vocab(id="vocab-walk", word="walk", phonetic="/wɔːk/", meaning="走路；散步"),
     ],

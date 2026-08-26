@@ -20,6 +20,9 @@ def test_episode_detail_contains_learning_content(client: TestClient) -> None:
     assert episode["sentences"]
     assert episode["vocab"]
     assert episode["knowledge"]
+    phonetics = {item["word"]: item["phonetic"] for item in episode["vocab"]}
+    assert phonetics["kitten"] == "/ˈkɪt.ən/"
+    assert phonetics["little"] == "/ˈlɪt.əl/"
 
 
 def test_dictation_records_a_gentle_mistake_and_updates_stats(client: TestClient) -> None:
