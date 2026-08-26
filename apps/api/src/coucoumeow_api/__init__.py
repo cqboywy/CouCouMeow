@@ -1,0 +1,1 @@
+"""CoucouMeow API service."""
