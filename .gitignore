@@ -1,1 +1,15 @@
 .worktrees/
+node_modules/
+dist/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
+*.mp4
+*.srt
+.superpowers/
+.DS_Store
+docs/.~*

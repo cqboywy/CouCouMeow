@@ -1,0 +1,12 @@
+{
+  "name": "coucoumeow-english-land",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "engines": { "node": ">=22 <27" },
+  "scripts": {
+    "dev:web": "pnpm --filter @coucoumeow/web dev",
+    "test:web": "pnpm --filter @coucoumeow/web test",
+    "typecheck:web": "pnpm --filter @coucoumeow/web typecheck",
+    "build:web": "pnpm --filter @coucoumeow/web build"
+  }
+}
