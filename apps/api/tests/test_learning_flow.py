@@ -12,24 +12,33 @@ def test_home_data_only_returns_published_episodes(client: TestClient) -> None:
 
 
 def test_episode_detail_contains_learning_content(client: TestClient) -> None:
-    response = client.get("/api/v1/episodes/l1-01-the-lost-kitten")
+    response = client.get("/api/v1/episodes/l1-001-dino-buddies-the-park")
 
     assert response.status_code == 200
     episode = response.json()
-    assert episode["local_video_filename"].endswith(".mp4")
-    assert episode["sentences"]
-    assert episode["vocab"]
-    assert episode["knowledge"]
+    assert episode["title"] == "Dino Buddies 1: The Park"
+    assert episode["chinese_title"] == "恐龙伙伴：公园奇遇"
+    assert episode["local_video_filename"] == "001_Dino Buddies 1_The Park.mp4"
+    assert len(episode["sentences"]) == 30
+    assert len([item for item in episode["sentences"] if item["is_featured"]]) == 12
+    assert len(episode["vocab"]) >= 15
+    assert len(episode["knowledge"]) == 6
+    assert all(item["examples"] for item in episode["knowledge"])
+    assert episode["story_summary"]
+    assert episode["comprehension_questions"]
+    assert episode["retell_steps"]
+    assert len(episode["past_tense_pairs"]) == 8
+    assert {"base": "see", "past": "saw", "meaning": "看见"} in episode["past_tense_pairs"]
     phonetics = {item["word"]: item["phonetic"] for item in episode["vocab"]}
-    assert phonetics["kitten"] == "/ˈkɪt.ən/"
-    assert phonetics["little"] == "/ˈlɪt.əl/"
+    assert phonetics["park"] == "/pɑːk/"
+    assert phonetics["stuck"] == "/stʌk/"
 
 
 def test_dictation_records_a_gentle_mistake_and_updates_stats(client: TestClient) -> None:
     before = client.get("/api/v1/stats").json()
     response = client.post(
         "/api/v1/practice/dictation",
-        json={"vocab_id": "vocab-kitten", "answer": "kittenn", "mode": "meaning"},
+        json={"vocab_id": "vocab-park", "answer": "parkk", "mode": "meaning"},
     )
 
     assert response.status_code == 200
@@ -42,7 +51,7 @@ def test_dictation_records_a_gentle_mistake_and_updates_stats(client: TestClient
 def test_speaking_can_be_manually_corrected(client: TestClient) -> None:
     attempt = client.post(
         "/api/v1/practice/speaking",
-        json={"sentence_id": "sentence-1", "transcript": "hello puppy"},
+        json={"sentence_id": "sentence-1", "transcript": "Rex stayed at home"},
     ).json()
     assert attempt["is_correct"] is False
 

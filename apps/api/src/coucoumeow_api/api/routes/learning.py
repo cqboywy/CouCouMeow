@@ -29,6 +29,7 @@ class Sentence(BaseModel):
     id: str
     english: str
     chinese: str
+    is_featured: bool = False
 
 
 class Vocab(BaseModel):
@@ -42,12 +43,25 @@ class Knowledge(BaseModel):
     id: str
     title: str
     explanation: str
+    examples: list[str]
+
+
+class PastTensePair(BaseModel):
+    base: str
+    past: str
+    meaning: str
 
 
 class EpisodeDetail(EpisodeListItem):
+    chinese_title: str
+    story_summary: str
+    story_theme: str
     sentences: list[Sentence]
     vocab: list[Vocab]
     knowledge: list[Knowledge]
+    comprehension_questions: list[str]
+    retell_steps: list[str]
+    past_tense_pairs: list[PastTensePair]
 
 
 class EpisodeListResponse(BaseModel):
@@ -94,26 +108,131 @@ class LoginResponse(BaseModel):
 
 
 _episode = EpisodeDetail(
-    id="l1-01-the-lost-kitten",
+    id="l1-001-dino-buddies-the-park",
     level=1,
-    title="The Lost Kitten",
-    local_video_filename="L1-01-The-Lost-Kitten.mp4",
+    title="Dino Buddies 1: The Park",
+    chinese_title="恐龙伙伴：公园奇遇",
+    local_video_filename="001_Dino Buddies 1_The Park.mp4",
     is_published=True,
     is_learned=False,
+    story_summary=(
+        "Rex 在公园里想和其他恐龙交朋友，可大家因为他是霸王龙而害怕地跑开了。"
+        "失落的 Rex 后来听见呼救声，才发现一只恐龙并不是害怕他，而是尾巴上的尖刺卡在了树里。"
+    ),
+    story_theme="不要只凭外表判断别人。先认真听，再用善意帮助需要帮助的朋友。",
     sentences=[
-        Sentence(id="sentence-1", english="Hello, little kitten.", chinese="你好，小猫咪。"),
-        Sentence(id="sentence-2", english="Are you looking for your home?", chinese="你在找你的家吗？"),
-        Sentence(id="sentence-3", english="Let's walk together.", chinese="让我们一起走吧。"),
+        Sentence(id="sentence-1", english="One day Rex was in the park.", chinese="一天，Rex 在公园里。", is_featured=True),
+        Sentence(id="sentence-2", english="He saw other dinosaurs.", chinese="他看到了其他恐龙。", is_featured=True),
+        Sentence(id="sentence-3", english='"Hi!" Rex said.', chinese="“嗨！”Rex 说道。"),
+        Sentence(id="sentence-4", english='"Help!" a dinosaur cried.', chinese="“救命！”一只恐龙喊道。"),
+        Sentence(id="sentence-5", english='"A T. rex!" the other one screamed.', chinese="“一只霸王龙！”另一只恐龙尖叫道。"),
+        Sentence(id="sentence-6", english="They ran away.", chinese="他们跑开了。", is_featured=True),
+        Sentence(id="sentence-7", english='Rex saw another dinosaur. "Hello!"', chinese="Rex 看见了另一只恐龙。“你好！”"),
+        Sentence(id="sentence-8", english='"Don\'t eat me!" she said.', chinese="“别吃我！”她说道。", is_featured=True),
+        Sentence(id="sentence-9", english="She ran away too.", chinese="她也跑开了。"),
+        Sentence(id="sentence-10", english="Rex sighed.", chinese="Rex 叹了口气。"),
+        Sentence(id="sentence-11", english='"Nobody will be my friend."', chinese="“没有人愿意做我的朋友。”", is_featured=True),
+        Sentence(id="sentence-12", english="Rex kicked a rock.", chinese="Rex 踢了一块石头。"),
+        Sentence(id="sentence-13", english="He sat down.", chinese="他坐了下来。"),
+        Sentence(id="sentence-14", english='"Help!" cried a dinosaur.', chinese="“救命！”一只恐龙喊道。"),
+        Sentence(id="sentence-15", english="He stood behind a tree.", chinese="他站在一棵树后面。", is_featured=True),
+        Sentence(id="sentence-16", english='"Oh no," Rex said.', chinese="“哦，不。”Rex 说道。"),
+        Sentence(id="sentence-17", english='"He\'s afraid of me too!"', chinese="“他也害怕我！”", is_featured=True),
+        Sentence(id="sentence-18", english='"Help!" the dinosaur cried again.', chinese="“救命！”那只恐龙又喊了一次。"),
+        Sentence(id="sentence-19", english="Rex got mad.", chinese="Rex 生气了。"),
+        Sentence(id="sentence-20", english='"I won\'t eat you!" he said.', chinese="“我不会吃你的！”他说道。", is_featured=True),
+        Sentence(id="sentence-21", english="The dinosaur blinked.", chinese="那只恐龙眨了眨眼。"),
+        Sentence(id="sentence-22", english='Then he said, "Help me!"', chinese="然后他说：“帮帮我！”"),
+        Sentence(id="sentence-23", english='"Huh?" Rex said.', chinese="“啊？”Rex 说道。"),
+        Sentence(id="sentence-24", english='"I\'m stuck!" the dinosaur said.', chinese="“我被卡住了！”那只恐龙说道。", is_featured=True),
+        Sentence(id="sentence-25", english='"See?"', chinese="“看见了吗？”"),
+        Sentence(id="sentence-26", english="Rex looked.", chinese="Rex 看了看。"),
+        Sentence(id="sentence-27", english="The dinosaur's tail had spikes.", chinese="这只恐龙的尾巴上有尖刺。", is_featured=True),
+        Sentence(id="sentence-28", english="One spike was stuck in a tree.", chinese="一根尖刺卡在了树里。", is_featured=True),
+        Sentence(id="sentence-29", english="The dinosaur grinned.", chinese="那只恐龙咧嘴笑了。"),
+        Sentence(id="sentence-30", english='"Can you please help me?"', chinese="“你可以帮帮我吗？”", is_featured=True),
     ],
     vocab=[
-        Vocab(id="vocab-kitten", word="kitten", phonetic="/ˈkɪt.ən/", meaning="小猫"),
-        Vocab(id="vocab-little", word="little", phonetic="/ˈlɪt.əl/", meaning="小的；年幼的"),
-        Vocab(id="vocab-home", word="home", phonetic="/həʊm/", meaning="家"),
-        Vocab(id="vocab-walk", word="walk", phonetic="/wɔːk/", meaning="走路；散步"),
+        Vocab(id="vocab-park", word="park", phonetic="/pɑːk/", meaning="公园"),
+        Vocab(id="vocab-dinosaur", word="dinosaur", phonetic="/ˈdaɪ.nə.sɔːr/", meaning="恐龙"),
+        Vocab(id="vocab-other", word="other", phonetic="/ˈʌð.ər/", meaning="其他的"),
+        Vocab(id="vocab-run-away", word="run away", phonetic="/rʌn əˈweɪ/", meaning="跑开；逃走"),
+        Vocab(id="vocab-friend", word="friend", phonetic="/frend/", meaning="朋友"),
+        Vocab(id="vocab-afraid", word="afraid", phonetic="/əˈfreɪd/", meaning="害怕的"),
+        Vocab(id="vocab-rock", word="rock", phonetic="/rɒk/", meaning="石头"),
+        Vocab(id="vocab-behind", word="behind", phonetic="/bɪˈhaɪnd/", meaning="在……后面"),
+        Vocab(id="vocab-tree", word="tree", phonetic="/triː/", meaning="树"),
+        Vocab(id="vocab-mad", word="mad", phonetic="/mæd/", meaning="生气的"),
+        Vocab(id="vocab-stuck", word="stuck", phonetic="/stʌk/", meaning="被卡住的"),
+        Vocab(id="vocab-tail", word="tail", phonetic="/teɪl/", meaning="尾巴"),
+        Vocab(id="vocab-spike", word="spike", phonetic="/spaɪk/", meaning="尖刺"),
+        Vocab(id="vocab-help", word="help", phonetic="/help/", meaning="帮助；救命"),
+        Vocab(id="vocab-please", word="please", phonetic="/pliːz/", meaning="请"),
+        Vocab(id="vocab-grin", word="grin", phonetic="/ɡrɪn/", meaning="咧嘴笑"),
+        Vocab(id="vocab-blink", word="blink", phonetic="/blɪŋk/", meaning="眨眼"),
     ],
     knowledge=[
-        Knowledge(id="knowledge-1", title="Are you ...?", explanation="用 Are you ...? 温柔地问对方现在是不是正在做某件事。"),
-        Knowledge(id="knowledge-2", title="Let's ...", explanation="用 Let's 加动词原形，邀请朋友一起做一件事。"),
+        Knowledge(
+            id="knowledge-1",
+            title="主语 + was / were + 地点",
+            explanation="讲过去发生的故事时，用 was 或 were 表示某人当时在哪里。",
+            examples=["I was in the library.", "The cat was in the garden.", "We were in the playground."],
+        ),
+        Knowledge(
+            id="knowledge-2",
+            title="Don't + 动词原形",
+            explanation="用 Don't 加动作，告诉别人不要做某件事。",
+            examples=["Don't run here.", "Don't touch it.", "Don't open the door."],
+        ),
+        Knowledge(
+            id="knowledge-3",
+            title="be afraid of + 人或事物",
+            explanation="用 be afraid of 表达害怕某个人或某样东西。",
+            examples=["I am afraid of spiders.", "She is afraid of the dark.", "The kitten is afraid of the dog."],
+        ),
+        Knowledge(
+            id="knowledge-4",
+            title="will / won't + 动词原形",
+            explanation="will 表示将会做，won't 表示将不会做。",
+            examples=["I will help you.", "We will be friends.", "I won't run away."],
+        ),
+        Knowledge(
+            id="knowledge-5",
+            title="Can you please + 动词原形?",
+            explanation="需要别人帮忙时，用这个句式会更礼貌。",
+            examples=["Can you please open the door?", "Can you please read this word?", "Can you please wait for me?"],
+        ),
+        Knowledge(
+            id="knowledge-6",
+            title="be stuck + 地点",
+            explanation="be stuck 表示某人或某物被卡住了。",
+            examples=["The ball is stuck under the chair.", "My zipper is stuck.", "The kite is stuck in the tree."],
+        ),
+    ],
+    comprehension_questions=[
+        "Rex 在哪里遇到了其他恐龙？",
+        "为什么其他恐龙看到 Rex 后跑开了？",
+        "Rex 觉得没有朋友时是什么心情？",
+        "最后那只恐龙是真的害怕 Rex 吗？",
+        "什么东西卡在了树里？",
+        "恐龙用了哪句话礼貌地请求帮助？",
+    ],
+    retell_steps=[
+        "Rex 来到公园，想认识新朋友。",
+        "其他恐龙误会 Rex，害怕地跑开了。",
+        "Rex 感到孤单和难过。",
+        "Rex 听到另一只恐龙呼救。",
+        "Rex 发现恐龙的尾巴尖刺卡在了树里。",
+    ],
+    past_tense_pairs=[
+        PastTensePair(base="see", past="saw", meaning="看见"),
+        PastTensePair(base="say", past="said", meaning="说"),
+        PastTensePair(base="run", past="ran", meaning="跑"),
+        PastTensePair(base="sit", past="sat", meaning="坐"),
+        PastTensePair(base="stand", past="stood", meaning="站"),
+        PastTensePair(base="get", past="got", meaning="变得；得到"),
+        PastTensePair(base="kick", past="kicked", meaning="踢"),
+        PastTensePair(base="look", past="looked", meaning="看"),
     ],
 )
 _learned_episode_ids: set[str] = set()
