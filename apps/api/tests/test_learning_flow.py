@@ -53,3 +53,12 @@ def test_demo_login_returns_child_profile(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json()["profile"]["display_name"] == "小咪"
+
+
+def test_web_origin_is_allowed_to_read_learning_api(client: TestClient) -> None:
+    response = client.get(
+        "/api/v1/episodes",
+        headers={"Origin": "http://127.0.0.1:5173"},
+    )
+
+    assert response.headers["access-control-allow-origin"] == "http://127.0.0.1:5173"

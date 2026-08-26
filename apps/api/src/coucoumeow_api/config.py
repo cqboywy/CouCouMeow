@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     app_name: Literal["凑凑喵英语乐园 / CouCouMeow English Land"] = "凑凑喵英语乐园 / CouCouMeow English Land"
     version: str = "0.1.0"
     app_env: Literal["development", "test", "production"] = "development"
-    cors_origins: str = "http://localhost:5173"
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     supabase_url: str | None = None
     supabase_service_role_key: str | None = None
     deepseek_api_key: str | None = None
