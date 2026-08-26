@@ -1,0 +1,170 @@
+"""Offline contract checks for the Supabase SQL artifacts.
+
+These checks intentionally do not emulate PostgreSQL or RLS. They make the
+deferred database suite safer by checking that its required DDL and pgTAP
+coverage remain present when Docker/cloud execution is unavailable.
+"""
+
+from __future__ import annotations
+
+import re
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[2]
+SUPABASE = ROOT / "supabase"
+MIGRATION = (SUPABASE / "migrations" / "20260826000100_initial_schema.sql").read_text()
+SCHEMA_TEST = (SUPABASE / "tests" / "001_schema.test.sql").read_text()
+RLS_TEST = (SUPABASE / "tests" / "002_rls.test.sql").read_text()
+SEED_PATH = SUPABASE / "seed.sql"
+
+
+def normalized(sql: str) -> str:
+    return re.sub(r"\s+", " ", sql.lower()).strip()
+
+
+class SupabaseStaticContractTest(unittest.TestCase):
+    def setUp(self) -> None:
+        self.migration = normalized(MIGRATION)
+
+    def assert_sql(self, fragment: str) -> None:
+        self.assertIn(normalized(fragment), self.migration)
+
+    def test_schema_contains_required_tables_enums_and_data_constraints(self) -> None:
+        for enum_name in (
+            "content_status",
+            "practice_type",
+            "mistake_type",
+            "mastery_status",
+        ):
+            self.assertRegex(
+                self.migration,
+                rf"create type public\.{enum_name} as enum \(",
+            )
+        self.assert_sql(
+            "create type public.content_status as enum "
+            "('draft', 'validated', 'published')"
+        )
+        self.assert_sql("create type public.mistake_type as enum ('vocab', 'sentence')")
+
+        for table in (
+            "lf_episodes",
+            "lf_sentences",
+            "lf_vocab",
+            "lf_knowledge",
+            "profiles",
+            "practice_sessions",
+            "practice_attempts",
+            "mistake_items",
+            "content_import_jobs",
+        ):
+            self.assert_sql(f"create table public.{table}")
+
+        self.assert_sql("unique (level, local_video_filename)")
+        for child in ("lf_sentences", "lf_vocab", "lf_knowledge"):
+            self.assertRegex(
+                self.migration,
+                rf"create table public\.{child} \([^;]+"
+                r"references public\.lf_episodes\(id\) on delete cascade",
+            )
+        self.assert_sql("normalized_word text generated always as (lower(btrim(word))) stored")
+        self.assert_sql("unique (episode_id, normalized_word)")
+        self.assert_sql("foreign key (session_id, user_id) references public.practice_sessions(id, user_id)")
+        self.assert_sql(
+            "check ((vocab_id is not null)::integer + "
+            "(sentence_id is not null)::integer = 1)"
+        )
+        self.assert_sql("create unique index mistake_items_user_vocab_uidx")
+        self.assert_sql("create unique index mistake_items_user_sentence_uidx")
+        self.assert_sql("create index practice_attempts_session_idx")
+        self.assert_sql("create index content_import_jobs_status_idx")
+        self.assert_sql("mistake_type = 'vocab' and vocab_id is not null and sentence_id is null")
+        self.assert_sql("mistake_type = 'sentence' and sentence_id is not null and vocab_id is null")
+        self.assert_sql("error_summary text check (error_summary is null or length(error_summary) <= 500)")
+
+    def test_replace_function_is_atomic_and_service_role_only(self) -> None:
+        signature = (
+            "public.replace_episode_content(uuid, text, jsonb, jsonb, jsonb)"
+        )
+        self.assert_sql("create or replace function public.replace_episode_content")
+        self.assert_sql("for update")
+        for table in ("lf_sentences", "lf_vocab", "lf_knowledge"):
+            self.assert_sql(f"delete from public.{table}")
+            self.assert_sql(f"insert into public.{table}")
+        self.assert_sql("content_status = 'validated'")
+        self.assert_sql(f"revoke all on function {signature} from public")
+        self.assert_sql(f"revoke all on function {signature} from anon, authenticated")
+        self.assert_sql(f"grant execute on function {signature} to service_role")
+        self.assertIn("replacement is atomic when a child insert fails", SCHEMA_TEST.lower())
+
+    def test_rls_policies_cover_parent_publication_and_owner_isolation(self) -> None:
+        all_tables = (
+            "lf_episodes",
+            "lf_sentences",
+            "lf_vocab",
+            "lf_knowledge",
+            "profiles",
+            "practice_sessions",
+            "practice_attempts",
+            "mistake_items",
+            "content_import_jobs",
+        )
+        for table in all_tables:
+            self.assert_sql(f"alter table public.{table} enable row level security")
+
+        for child in ("lf_sentences", "lf_vocab", "lf_knowledge"):
+            self.assertRegex(
+                self.migration,
+                rf"create policy [^;]+ on public\.{child} for select to authenticated "
+                rf"using \(exists \( select 1 from public\.lf_episodes",
+            )
+        self.assert_sql(
+            "on public.lf_episodes for select to authenticated "
+            "using (content_status = 'published')"
+        )
+        for table in (
+            "profiles",
+            "practice_sessions",
+            "practice_attempts",
+            "mistake_items",
+        ):
+            for operation in ("select", "insert", "update", "delete"):
+                self.assertRegex(
+                    self.migration,
+                    rf"create policy [^;]+ on public\.{table} for {operation} "
+                    r"to authenticated",
+                )
+        self.assertRegex(
+            self.migration,
+            r"create policy [^;]+ on public\.practice_attempts[^;]+"
+            r"public\.practice_sessions",
+        )
+        self.assertNotRegex(
+            self.migration,
+            r"create policy [^;]+ on public\.content_import_jobs",
+        )
+        self.assert_sql("grant select on table public.lf_episodes")
+        self.assertNotRegex(
+            self.migration,
+            r"grant\s+[^;]*update[^;]*public\.lf_episodes[^;]*authenticated",
+        )
+        self.assertNotRegex(
+            self.migration,
+            r"grant\s+[^;]*public\.content_import_jobs[^;]*authenticated",
+        )
+        self.assertIn("attempt rows cannot cross session owners", RLS_TEST.lower())
+        self.assertIn("visibility follows the published parent", RLS_TEST.lower())
+
+    def test_seed_is_one_fictional_episode_without_real_paths_or_source_text(self) -> None:
+        self.assertTrue(SEED_PATH.is_file(), "supabase/seed.sql must exist")
+        seed = SEED_PATH.read_text()
+        seed_normalized = normalized(seed)
+        self.assertEqual(seed_normalized.count("insert into public.lf_episodes"), 1)
+        self.assertIn("the sleepy cat", seed_normalized)
+        self.assertNotIn("little fox", seed_normalized)
+        self.assertNotRegex(seed, r"/(Users|home|var|tmp)/|[A-Za-z]:\\\\")
+
+
+if __name__ == "__main__":
+    unittest.main()
