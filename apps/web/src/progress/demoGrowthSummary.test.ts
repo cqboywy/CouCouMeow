@@ -11,6 +11,6 @@ describe('getDemoGrowthSummary', () => {
     expect(summary.items.sentences).toHaveLength(3);
     expect(summary.items.patterns).toHaveLength(2);
     expect(summary.items.episodes).toHaveLength(1);
-    expect(summary.reviewItems.map(item => item.english)).toEqual(['creature', 'He flew out of his cave.']);
+    expect(summary.reviewItems.map(item => item.english)).toEqual(['friend', 'He flew out of his cave.']);
   });
 });
