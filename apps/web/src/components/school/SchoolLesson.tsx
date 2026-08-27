@@ -1,6 +1,7 @@
 import { BookOpen, CheckCircle2, ChevronLeft, Volume2 } from 'lucide-react';
 import { useState } from 'react';
 import type { CurriculumLesson, SchoolExercise, SchoolLearningItem } from '../../curriculum/types';
+import { getUnitById } from '../../curriculum/pepGrade4UpperUnit1';
 import { useEnglishSpeech } from '../../hooks/useEnglishSpeech';
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';
@@ -31,6 +32,7 @@ function LearningItems({ title, items }: { title: string; items: SchoolLearningI
 }
 
 export function SchoolLesson({ lesson, initialStep = 'learn', onRecordExercise, onComplete, onBack, storageError }: Props) {
+  const unit = getUnitById(lesson.unitId);
   const [step, setStep] = useState<0 | 1 | 2>(initialStep === 'practice' ? 1 : initialStep === 'check' ? 2 : 0);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
@@ -50,9 +52,9 @@ export function SchoolLesson({ lesson, initialStep = 'learn', onRecordExercise, 
   };
   const finish = () => { onComplete(lesson); };
   return <main className="school-page school-lesson" aria-labelledby="school-lesson-title">
-    <button className="back-link" type="button" onClick={onBack}><ChevronLeft size={20} /> 回到 Unit 1</button>
+    <button className="back-link" type="button" onClick={onBack}><ChevronLeft size={20} /> 回到 Unit {unit?.sequence ?? 1}</button>
     <header className="school-lesson__header">
-      <p className="eyebrow">PEP 四年级上册 · Unit 1 · 第 {lesson.sequence} 课</p>
+      <p className="eyebrow">PEP 四年级上册 · Unit {unit?.sequence ?? 1} · 第 {lesson.sequence} 课</p>
       <h2 id="school-lesson-title">{lesson.title}</h2>
       <p>{lesson.subtitle}</p>
       <span><BookOpen size={18} /> 请打开课本第 {lesson.pageReferences.join('–')} 页 · 约 {lesson.durationMinutes} 分钟</span>

@@ -60,4 +60,12 @@ describe('SchoolLesson', () => {
     expect(screen.getByRole('heading', { name: '哪一句是在介绍朋友的职业？' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '去做小检查' })).not.toBeInTheDocument();
   });
+
+  it('shows the actual Unit 2 breadcrumb for a Unit 2 lesson', () => {
+    const lesson = getLessonById('pep4a-u2-l1')!;
+    render(<SchoolLesson lesson={lesson} onRecordExercise={vi.fn()} onComplete={vi.fn()} onBack={vi.fn()} storageError="" />);
+
+    expect(screen.getByText('PEP 四年级上册 · Unit 2 · 第 1 课')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '回到 Unit 2' })).toBeInTheDocument();
+  });
 });
