@@ -63,6 +63,8 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: '开始单词听写' })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button', { name: '朗读句子：One day Rex was in the park.' })[0]);
     expect(screen.getByRole('status')).toHaveTextContent('这台设备暂时不能朗读英文');
+    fireEvent.click(screen.getByRole('button', { name: '回到小书架' }));
+    expect(screen.getByRole('button', { name: /Level 1/ })).toBeInTheDocument();
     vi.unstubAllGlobals();
   });
 
