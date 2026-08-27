@@ -49,6 +49,8 @@ def test_episode_detail_contains_learning_content(client: TestClient) -> None:
     assert {"base": "see", "past": "saw", "meaning": "看见"} in episode["past_tense_pairs"]
     phonetics = {item["word"]: item["phonetic"] for item in episode["vocab"]}
     assert phonetics["park"] == "/pɑːk/"
+    assert phonetics["dinosaur"] == "/ˈdaɪnəsɔː/"
+    assert phonetics["other"] == "/ˈʌðə/"
     assert phonetics["stuck"] == "/stʌk/"
 
 

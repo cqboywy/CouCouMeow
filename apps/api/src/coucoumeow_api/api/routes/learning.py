@@ -160,8 +160,8 @@ _dino_episode = EpisodeDetail(
     ],
     vocab=[
         Vocab(id="vocab-park", word="park", phonetic="/pɑːk/", meaning="公园"),
-        Vocab(id="vocab-dinosaur", word="dinosaur", phonetic="/ˈdaɪ.nə.sɔːr/", meaning="恐龙"),
-        Vocab(id="vocab-other", word="other", phonetic="/ˈʌð.ə/", meaning="其他的"),
+        Vocab(id="vocab-dinosaur", word="dinosaur", phonetic="/ˈdaɪnəsɔː/", meaning="恐龙"),
+        Vocab(id="vocab-other", word="other", phonetic="/ˈʌðə/", meaning="其他的"),
         Vocab(id="vocab-run-away", word="run away", phonetic="/rʌn əˈweɪ/", meaning="跑开；逃走"),
         Vocab(id="vocab-friend", word="friend", phonetic="/frend/", meaning="朋友"),
         Vocab(id="vocab-afraid", word="afraid", phonetic="/əˈfreɪd/", meaning="害怕的"),
@@ -285,11 +285,11 @@ _bat_hunting_episode = EpisodeDetail(
         Vocab(id="bat-1-vocab-house", word="house", phonetic="/haʊs/", meaning="房子"),
         Vocab(id="bat-1-vocab-tree", word="tree", phonetic="/triː/", meaning="树"),
         Vocab(id="bat-1-vocab-big", word="big", phonetic="/bɪɡ/", meaning="大的"),
-        Vocab(id="bat-1-vocab-little", word="little", phonetic="/ˈlɪt.əl/", meaning="小的"),
+        Vocab(id="bat-1-vocab-little", word="little", phonetic="/ˈlɪtəl/", meaning="小的"),
         Vocab(id="bat-1-vocab-dark", word="dark", phonetic="/dɑːk/", meaning="黑暗的"),
         Vocab(id="bat-1-vocab-wind", word="wind", phonetic="/wɪnd/", meaning="风"),
         Vocab(id="bat-1-vocab-rain", word="rain", phonetic="/reɪn/", meaning="雨"),
-        Vocab(id="bat-1-vocab-far", word="far", phonetic="/fɑːr/", meaning="远的"),
+        Vocab(id="bat-1-vocab-far", word="far", phonetic="/fɑː/", meaning="远的"),
         Vocab(id="bat-1-vocab-home", word="home", phonetic="/həʊm/", meaning="家"),
     ],
     knowledge=[
@@ -353,7 +353,7 @@ _bat_rain_episode = EpisodeDetail(
         Vocab(id="bat-2-vocab-toe", word="toe", phonetic="/təʊ/", meaning="脚趾"),
         Vocab(id="bat-2-vocab-way", word="way", phonetic="/weɪ/", meaning="办法；道路"),
         Vocab(id="bat-2-vocab-hole", word="hole", phonetic="/həʊl/", meaning="洞"),
-        Vocab(id="bat-2-vocab-little", word="little", phonetic="/ˈlɪt.əl/", meaning="小的"),
+        Vocab(id="bat-2-vocab-little", word="little", phonetic="/ˈlɪtəl/", meaning="小的"),
     ],
     knowledge=[
         Knowledge(id="bat-2-knowledge-1", title="I am + 状态", explanation="用 I am 说出自己现在的状态或感受。", examples=["I am happy.", "I am cold.", "I am lost."]),
