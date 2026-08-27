@@ -66,6 +66,19 @@ def test_dictation_records_a_gentle_mistake_and_updates_stats(client: TestClient
     assert client.get("/api/v1/stats").json()["practice_count"] == before["practice_count"] + 1
 
 
+def test_spoken_vocab_answer_is_recorded_separately_from_written_dictation(client: TestClient) -> None:
+    response = client.post(
+        "/api/v1/practice/dictation",
+        json={"vocab_id": "bat-2-vocab-wet", "answer": "wet", "mode": "meaning", "answer_method": "spoken"},
+    )
+
+    assert response.status_code == 200
+    result = response.json()
+    assert result["is_correct"] is True
+    assert result["answer_method"] == "spoken"
+    assert "说对" in result["message"]
+
+
 def test_speaking_can_be_manually_corrected(client: TestClient) -> None:
     attempt = client.post(
         "/api/v1/practice/speaking",

@@ -74,6 +74,7 @@ class DictationRequest(BaseModel):
     vocab_id: str
     answer: str = Field(min_length=1, max_length=120)
     mode: Literal["meaning", "audio"]
+    answer_method: Literal["written", "spoken"] = "written"
 
 
 class SpeakingRequest(BaseModel):
@@ -86,6 +87,7 @@ class PracticeResult(BaseModel):
     is_correct: bool
     message: str
     similarity: float | None = None
+    answer_method: Literal["written", "spoken", "sentence_reading"] | None = None
 
 
 class StatsResponse(BaseModel):
@@ -423,7 +425,14 @@ def check_dictation(request: DictationRequest) -> PracticeResult:
     result = PracticeResult(
         attempt_id=str(uuid4()),
         is_correct=is_correct,
-        message="太棒啦，这个单词被你抓住了！" if is_correct else "差一点点，凑凑喵陪你再试一次。",
+        answer_method=request.answer_method,
+        message=(
+            "太棒啦，你说对了这个单词！"
+            if is_correct and request.answer_method == "spoken"
+            else "太棒啦，这个单词被你抓住了！"
+            if is_correct
+            else "差一点点，凑凑喵陪你再试一次。"
+        ),
     )
     _attempts[result.attempt_id] = result
     if not is_correct:
@@ -442,6 +451,7 @@ def check_speaking(request: SpeakingRequest) -> PracticeResult:
         attempt_id=str(uuid4()),
         is_correct=is_correct,
         similarity=round(similarity, 2),
+        answer_method="sentence_reading",
         message="读得真认真，凑凑喵听懂啦！" if is_correct else "已经很接近啦，你可以再慢一点读一次。",
     )
     _attempts[result.attempt_id] = result

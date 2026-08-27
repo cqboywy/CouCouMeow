@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SUPABASE = ROOT / "supabase"
 MIGRATION = (SUPABASE / "migrations" / "20260826000100_initial_schema.sql").read_text()
+ATTEMPT_EVIDENCE_MIGRATION = SUPABASE / "migrations" / "20260827000200_add_attempt_answer_method.sql"
 SCHEMA_TEST = (SUPABASE / "tests" / "001_schema.test.sql").read_text()
 RLS_TEST = (SUPABASE / "tests" / "002_rls.test.sql").read_text()
 SEED_PATH = SUPABASE / "seed.sql"
@@ -109,6 +110,12 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assertIn("replacement preserves historical attempt snapshots", SCHEMA_TEST.lower())
         self.assertIn("attempt item must belong to the session episode", SCHEMA_TEST.lower())
         self.assertIn("new attempts require exactly one content item", SCHEMA_TEST.lower())
+
+    def test_attempt_history_keeps_the_learning_evidence_type(self) -> None:
+        self.assertTrue(ATTEMPT_EVIDENCE_MIGRATION.is_file())
+        migration = normalized(ATTEMPT_EVIDENCE_MIGRATION.read_text())
+        self.assertIn("add column if not exists answer_method text", migration)
+        self.assertIn("answer_method in ('written', 'spoken', 'sentence_reading')", migration)
 
     def test_replace_function_has_exactly_the_public_contract_signature(self) -> None:
         declaration = re.search(

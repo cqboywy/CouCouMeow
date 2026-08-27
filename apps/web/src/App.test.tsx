@@ -86,6 +86,8 @@ describe('App', () => {
     render(<App />);
     fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
     fireEvent.click(await screen.findByRole('button', { name: '2. 单词听写' }));
+    expect(screen.getByRole('button', { name: '写出来' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '说出来' })).toBeInTheDocument();
     const previous = screen.getByRole('button', { name: '上一题' });
     const next = screen.getByRole('button', { name: '下一题' });
     expect(previous).toBeDisabled();
