@@ -63,6 +63,8 @@ describe('motion interface', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '成长记录' }));
     expect(screen.getByRole('heading', { name: '我的成长记录' })).toBeInTheDocument();
-    expect(screen.getByRole('tablist', { name: '学习收藏分类' })).toBeInTheDocument();
+    expect(screen.getByRole('tablist', { name: '成长记录范围' })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: '校内成长' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.queryByRole('tablist', { name: '学习收藏分类' })).not.toBeInTheDocument();
   });
 });
