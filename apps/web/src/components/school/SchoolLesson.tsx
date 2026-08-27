@@ -7,6 +7,7 @@ import { Surface } from '../ui/Surface';
 
 type Props = {
   lesson: CurriculumLesson;
+  initialStep?: 'learn' | 'practice' | 'check';
   onRecordExercise: (lesson: CurriculumLesson, exercise: SchoolExercise, correct: boolean) => void;
   onComplete: (lesson: CurriculumLesson) => void;
   onBack: () => void;
@@ -29,8 +30,8 @@ function LearningItems({ title, items }: { title: string; items: SchoolLearningI
   </section>;
 }
 
-export function SchoolLesson({ lesson, onRecordExercise, onComplete, onBack, storageError }: Props) {
-  const [step, setStep] = useState<0 | 1 | 2>(0);
+export function SchoolLesson({ lesson, initialStep = 'learn', onRecordExercise, onComplete, onBack, storageError }: Props) {
+  const [step, setStep] = useState<0 | 1 | 2>(initialStep === 'practice' ? 1 : initialStep === 'check' ? 2 : 0);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState('');
   const [correct, setCorrect] = useState(false);

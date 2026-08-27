@@ -67,4 +67,15 @@ describe('motion interface', () => {
     expect(screen.getByRole('tab', { name: '校内成长' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.queryByRole('tablist', { name: '学习收藏分类' })).not.toBeInTheDocument();
   });
+
+  it('uses imported extracurricular lessons when the local learning API is unavailable', async () => {
+    window.history.replaceState(null, '', '/?ui=motion');
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+
+    render(<App />);
+
+    fireEvent.click(await screen.findByRole('button', { name: '课外动画' }));
+    expect(screen.getByRole('button', { name: /Level 1 3 集已发布/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Bat and Friends 2 集' })).toBeInTheDocument();
+  });
 });
