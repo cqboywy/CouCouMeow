@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 describe('motion interface', () => {
-  it('opens the independent cloud story stage from the ui query', async () => {
+  it('opens a simple school-first stage from the ui query', async () => {
     window.history.replaceState(null, '', '/?ui=motion');
     vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
       const url = String(input);
@@ -31,17 +31,17 @@ describe('motion interface', () => {
 
     render(<App />);
 
-    expect(await screen.findByRole('region', { name: '今日英语故事舞台' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: '今天，一起走进英语故事' })).toHaveClass('motion-heading');
-    expect(screen.getByRole('button', { name: /开始学习 The Park/ })).toBeInTheDocument();
+    expect(await screen.findByRole('region', { name: '今日校内学习舞台' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '今天，把课本学轻松一点' })).toHaveClass('motion-heading');
+    expect(screen.getAllByRole('button', { name: /开始校内学习/ })).toHaveLength(1);
+    expect(screen.getByText('PEP 四年级上册 · Unit 1')).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: '首页内容' })).toBeInTheDocument();
-    expect(screen.queryByText('今天的英语故事')).not.toBeInTheDocument();
-    expect(screen.queryByText('第 1 集')).not.toBeInTheDocument();
-    expect(screen.getByRole('region', { name: '今日学习路径' })).toBeInTheDocument();
-    expect(screen.getByText('先看懂故事，再练单词，最后勇敢开口。').closest('[aria-label="今日学习路径"]')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '校内同步' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '课外动画' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: '家人做什么工作' })).not.toBeInTheDocument();
   });
 
-  it('keeps the bookshelf and progress destinations usable', async () => {
+  it('keeps school, extracurricular, and progress destinations separate and usable', async () => {
     window.history.replaceState(null, '', '/?ui=motion');
     vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
       const url = String(input);
@@ -53,7 +53,11 @@ describe('motion interface', () => {
 
     render(<App />);
 
-    fireEvent.click(await screen.findByRole('button', { name: '剧集书架' }));
+    fireEvent.click(await screen.findByRole('button', { name: '校内同步' }));
+    expect(screen.getByRole('heading', { name: 'Unit 1 Helping at home' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /开始第/ })).toHaveLength(6);
+
+    fireEvent.click(screen.getByRole('button', { name: '课外动画' }));
     expect(screen.getByRole('heading', { name: '动画学习小书架' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Level 1/ })).toBeInTheDocument();
 
