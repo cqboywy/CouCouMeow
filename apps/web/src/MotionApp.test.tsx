@@ -55,6 +55,6 @@ describe('motion interface', () => {
 
     fireEvent.click(screen.getByRole('button', { name: '成长记录' }));
     expect(screen.getByRole('heading', { name: '我的成长记录' })).toBeInTheDocument();
-    expect(screen.getByText('17')).toBeInTheDocument();
+    expect(screen.getByRole('tablist', { name: '学习收藏分类' })).toBeInTheDocument();
   });
 });

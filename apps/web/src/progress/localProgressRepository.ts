@@ -37,6 +37,7 @@ export type DailySummary = {
 
 export type GrowthSummary = {
   today: DailySummary;
+  days: DailySummary[];
   items: Record<'words' | 'sentences' | 'patterns' | 'episodes', MasteryItem[]>;
 };
 
@@ -110,7 +111,18 @@ export function createLocalProgressRepository(storage: Storage, now: () => Date)
       if (mastery.kind === 'pattern') items.patterns.push(mastery);
       if (mastery.kind === 'episode') items.episodes.push(mastery);
     }
-    return { today, items };
+    const days = new Map<string, DailySummary>();
+    for (const event of record.events) {
+      const daily = days.get(event.day) ?? emptyDaily(event.day);
+      if (event.type === 'practice_completed') daily.practiceCount += 1;
+      if (event.type === 'mastered') {
+        const mastery = masteries.get(event.item.id);
+        if (mastery) (mastery.kind === 'word' ? daily.newWords : mastery.kind === 'sentence' ? daily.newSentences : mastery.kind === 'pattern' ? daily.newPatterns : daily.newEpisodes).push(mastery);
+      }
+      days.set(event.day, daily);
+    }
+    if (!days.has(today.day)) days.set(today.day, today);
+    return { today, days: [...days.values()].sort((a, b) => b.day.localeCompare(a.day)).slice(0, 7), items };
   };
   return { getSummary, recordPractice, markMastered };
 }
