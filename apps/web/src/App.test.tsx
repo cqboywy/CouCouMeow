@@ -13,10 +13,11 @@ describe('App', () => {
   it('separates today, bookshelf, and progress into clear home sections', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ items: [{
-        id: 'l1-001-dino-buddies-the-park', level: 1, title: 'Dino Buddies 1: The Park',
-        local_video_filename: '001_Dino Buddies 1_The Park.mp4', is_published: true, is_learned: false,
-      }] }),
+      json: async () => ({ items: [
+        { id: 'l1-001-dino-buddies-the-park', level: 1, series_title: 'Dino Buddies', episode_number: 1, title: 'The Park', local_video_filename: '001_Dino Buddies 1_The Park.mp4', is_published: true, is_learned: false },
+        { id: 'l1-bat-and-friends-001-hunting-for-bugs', level: 1, series_title: 'Bat and Friends', episode_number: 1, title: 'Hunting for Bugs', local_video_filename: '001_Bat and Friends 1_Hunting for Bugs.mp4', is_published: true, is_learned: false },
+        { id: 'l1-bat-and-friends-002-lost-in-the-rain', level: 1, series_title: 'Bat and Friends', episode_number: 2, title: 'Lost in the Rain', local_video_filename: '002_Bat and Friends 2_Lost in the Rain.mp4', is_published: true, is_learned: false },
+      ] }),
     }));
     render(<App />);
     expect(await screen.findByRole('heading', { name: '今天继续学习' })).toBeInTheDocument();
@@ -25,7 +26,10 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: '剧集书架' }));
     expect(screen.getByRole('button', { name: /Level 1/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Level 9/ })).toBeInTheDocument();
-    expect(screen.getByText('Dino Buddies 1: The Park')).toBeInTheDocument();
+    expect(screen.getByText('Bat and Friends')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Bat and Friends/ }));
+    expect(screen.getByText('第 1 集 · Hunting for Bugs')).toBeInTheDocument();
+    expect(screen.getByText('第 2 集 · Lost in the Rain')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: '成长记录' }));
     expect(screen.getByRole('heading', { name: '我的成长记录' })).toBeInTheDocument();
     vi.unstubAllGlobals();

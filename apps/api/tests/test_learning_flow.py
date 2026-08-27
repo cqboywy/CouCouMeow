@@ -11,12 +11,30 @@ def test_home_data_only_returns_published_episodes(client: TestClient) -> None:
     assert episodes[0]["level"] == 1
 
 
+def test_level_one_groups_bat_and_friends_by_series_and_episode_number(client: TestClient) -> None:
+    episodes = client.get("/api/v1/episodes").json()["items"]
+    bat_episodes = [episode for episode in episodes if episode["series_title"] == "Bat and Friends"]
+
+    assert [(episode["episode_number"], episode["title"]) for episode in bat_episodes] == [
+        (1, "Hunting for Bugs"),
+        (2, "Lost in the Rain"),
+    ]
+
+    first_episode = client.get("/api/v1/episodes/l1-bat-and-friends-001-hunting-for-bugs").json()
+    assert first_episode["local_video_filename"] == "001_Bat and Friends 1_Hunting for Bugs.mp4"
+    assert len(first_episode["sentences"]) == 19
+    assert first_episode["story_summary"]
+    assert first_episode["knowledge"]
+
+
 def test_episode_detail_contains_learning_content(client: TestClient) -> None:
     response = client.get("/api/v1/episodes/l1-001-dino-buddies-the-park")
 
     assert response.status_code == 200
     episode = response.json()
-    assert episode["title"] == "Dino Buddies 1: The Park"
+    assert episode["series_title"] == "Dino Buddies"
+    assert episode["episode_number"] == 1
+    assert episode["title"] == "The Park"
     assert episode["chinese_title"] == "恐龙伙伴：公园奇遇"
     assert episode["local_video_filename"] == "001_Dino Buddies 1_The Park.mp4"
     assert len(episode["sentences"]) == 30
