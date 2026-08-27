@@ -1,6 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
+
+afterEach(() => vi.unstubAllGlobals());
 
 describe('App', () => {
   it('renders the official product names', () => {
@@ -61,6 +63,50 @@ describe('App', () => {
     fireEvent.click(screen.getAllByRole('button', { name: '朗读句子：One day Rex was in the park.' })[0]);
     expect(screen.getByRole('status')).toHaveTextContent('这台设备暂时不能朗读英文');
     vi.unstubAllGlobals();
+  });
+
+  it('shows preparing, playing, and failed states for sentence narration', async () => {
+    const utterances: Array<{ onstart: (() => void) | null; onerror: ((event: { error: string }) => void) | null }> = [];
+    class TestUtterance {
+      lang = '';
+      rate = 1;
+      voice: SpeechSynthesisVoice | null = null;
+      onstart: (() => void) | null = null;
+      onend: (() => void) | null = null;
+      onerror: ((event: { error: string }) => void) | null = null;
+      constructor(public text: string) { utterances.push(this); }
+    }
+    const voice = { lang: 'en-US', name: 'Test English', localService: true, default: true, voiceURI: 'test' } as SpeechSynthesisVoice;
+    vi.stubGlobal('SpeechSynthesisUtterance', TestUtterance);
+    vi.stubGlobal('speechSynthesis', {
+      getVoices: () => [voice],
+      cancel: vi.fn(),
+      speak: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      speaking: false,
+      pending: false,
+    });
+    const detail = {
+      id: 'l1-001-dino-buddies-the-park', level: 1, series_title: 'Dino Buddies', episode_number: 1, title: 'Dino Buddies 1: The Park', chinese_title: '恐龙伙伴：公园奇遇', local_video_filename: '001_Dino Buddies 1_The Park.mp4', story_summary: '故事简介', story_theme: '故事主题', is_published: true, is_learned: false,
+      sentences: [{ id: 'sentence-1', english: 'One day Rex was in the park.', chinese: '一天，Rex 在公园里。', is_featured: true }], vocab: [], knowledge: [], comprehension_questions: [], retell_steps: [], past_tense_pairs: [],
+    };
+    vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      const body = url.endsWith('/episodes') ? { items: [detail] } : url.endsWith('/stats') ? { learned_episodes: 0, total_words: 17, practice_count: 0, mistake_count: 0 } : detail;
+      return { ok: true, json: async () => body };
+    }));
+
+    render(<App />);
+    fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
+    const play = (await screen.findAllByRole('button', { name: '朗读：One day Rex was in the park.' }))[0];
+    fireEvent.click(play);
+
+    expect(screen.getByRole('status')).toHaveTextContent('正在启动英文朗读');
+    act(() => utterances[0]?.onstart?.());
+    expect(screen.getByRole('status')).toHaveTextContent('正在朗读：One day Rex was in the park.');
+    act(() => utterances[0]?.onerror?.({ error: 'synthesis-failed' }));
+    expect(play.closest('article')).toHaveTextContent('英文朗读正在加载中，请稍等。');
   });
 
   it('provides previous and next controls during dictation', async () => {
