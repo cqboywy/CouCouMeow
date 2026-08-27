@@ -33,4 +33,11 @@ describe('local progress repository', () => {
 
     expect(createLocalProgressRepository(memory, () => new Date('2026-08-27T09:00:00')).getSummary().today.practiceCount).toBe(0);
   });
+
+  it('keeps the latest incorrect practice in today review', () => {
+    const repo = createLocalProgressRepository(memory, () => new Date('2026-08-27T09:00:00'));
+    repo.recordPractice(word, false, 'written');
+
+    expect(repo.getSummary().reviewItems).toEqual([expect.objectContaining({ id: 'vocab-park', english: 'park' })]);
+  });
 });

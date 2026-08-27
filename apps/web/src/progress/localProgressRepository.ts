@@ -39,6 +39,7 @@ export type GrowthSummary = {
   today: DailySummary;
   days: DailySummary[];
   items: Record<'words' | 'sentences' | 'patterns' | 'episodes', MasteryItem[]>;
+  reviewItems: LearningItem[];
 };
 
 export const PROGRESS_STORAGE_KEY = 'coucoumeow.learning-progress.v1';
@@ -122,7 +123,10 @@ export function createLocalProgressRepository(storage: Storage, now: () => Date)
       days.set(event.day, daily);
     }
     if (!days.has(today.day)) days.set(today.day, today);
-    return { today, days: [...days.values()].sort((a, b) => b.day.localeCompare(a.day)).slice(0, 7), items };
+    const latestPractice = new Map<string, LearningEvent>();
+    for (const event of record.events) if (event.type === 'practice_completed') latestPractice.set(event.item.id, event);
+    const reviewItems = [...latestPractice.values()].filter(event => !event.correct).map(event => event.item);
+    return { today, days: [...days.values()].sort((a, b) => b.day.localeCompare(a.day)).slice(0, 7), items, reviewItems };
   };
   return { getSummary, recordPractice, markMastered };
 }
