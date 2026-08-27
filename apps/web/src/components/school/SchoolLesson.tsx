@@ -32,11 +32,16 @@ function LearningItems({ title, items }: { title: string; items: SchoolLearningI
 
 export function SchoolLesson({ lesson, initialStep = 'learn', onRecordExercise, onComplete, onBack, storageError }: Props) {
   const [step, setStep] = useState<0 | 1 | 2>(initialStep === 'practice' ? 1 : initialStep === 'check' ? 2 : 0);
+  const [questionIndex, setQuestionIndex] = useState(0);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState('');
   const [correct, setCorrect] = useState(false);
-  const exercise = lesson.exercises[step === 2 ? 1 : 0] ?? lesson.exercises[0];
-  const moveTo = (next: 1 | 2) => { setStep(next); setAnswer(''); setFeedback(''); setCorrect(false); };
+  const stage = step === 2 ? 'check' : 'practice';
+  const exercises = lesson.exercises.filter(item => item.stage === stage);
+  const exercise = exercises[questionIndex] ?? exercises[0];
+  const moveTo = (next: 1 | 2) => { setStep(next); setQuestionIndex(0); setAnswer(''); setFeedback(''); setCorrect(false); };
+  const moveToNextQuestion = () => { setQuestionIndex(index => index + 1); setAnswer(''); setFeedback(''); setCorrect(false); };
+  const isFinalQuestion = questionIndex === exercises.length - 1;
   const check = () => {
     const isCorrect = normalize(answer) === normalize(exercise.answer);
     onRecordExercise(lesson, exercise, isCorrect);
@@ -66,14 +71,16 @@ export function SchoolLesson({ lesson, initialStep = 'learn', onRecordExercise, 
       <Button onClick={() => moveTo(1)}>开始练习</Button>
     </Surface> : <Surface className="school-exercise">
       <p className="school-kicker">{step === 1 ? '练一练' : '小检查'}</p>
+      <p className="school-exercise__count">第 {questionIndex + 1} / {exercises.length} 题</p>
       <h3>{exercise.prompt}</h3>
       {exercise.kind === 'choice' ? <div className="school-exercise__choices">
         {exercise.options?.map(option => <button type="button" className={answer === option ? 'selected' : ''} key={option} onClick={() => { setAnswer(option); setFeedback(''); }}>{option}</button>)}
       </div> : exercise.kind === 'self_check' ? <button type="button" className={`school-self-check ${answer === 'yes' ? 'selected' : ''}`} onClick={() => setAnswer('yes')}><CheckCircle2 size={22} /> 我会了</button> : <label className="school-exercise__input">填写答案<input aria-label="填写答案" value={answer} onChange={event => { setAnswer(event.target.value); setFeedback(''); }} autoComplete="off" /></label>}
       {!feedback && <Button disabled={!answer} onClick={check}>检查答案</Button>}
       {feedback && <p className={correct ? 'answer-note answer-note--correct' : 'answer-note'} role="status">{feedback}</p>}
-      {correct && step === 1 && <Button onClick={() => moveTo(2)}>去做小检查</Button>}
-      {correct && step === 2 && <Button onClick={finish}>完成本课</Button>}
+      {correct && !isFinalQuestion && <Button onClick={moveToNextQuestion}>下一题</Button>}
+      {correct && isFinalQuestion && step === 1 && <Button onClick={() => moveTo(2)}>去做小检查</Button>}
+      {correct && isFinalQuestion && step === 2 && <Button onClick={finish}>完成本课</Button>}
       {storageError && <p className="gentle-note" role="status">{storageError}</p>}
     </Surface>}
   </main>;

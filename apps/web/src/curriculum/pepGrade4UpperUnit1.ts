@@ -76,8 +76,10 @@ export const pepGrade4UpperUnit1: CurriculumUnit = {
       sentences: [sentence('can-you-help', 'Can you help?', '你能帮忙吗？'), sentence('yes-i-can', 'Yes, I can.', '是的，我能。')],
       phonics: [], explanation: '先观察课本里的家庭场景，再说一说自己在家能做什么。',
       exercises: [
-        { id: 'pep4a-u1-l1-e1', kind: 'choice', prompt: '“家务”用英语怎么说？', answer: 'chores', options: ['chores', 'chairs', 'doctors'], hint: '课本歌谣里出现了 do some chores。', item: word('chores', 'chores', '家务') },
-        { id: 'pep4a-u1-l1-e2', kind: 'typing', prompt: '补全：Yes, I ___.', answer: 'can', hint: '回答 Can you help? 时使用 can。', item: sentence('yes-i-can', 'Yes, I can.', '是的，我能。') },
+        { id: 'pep4a-u1-l1-e1', stage: 'practice', kind: 'choice', prompt: '“家务”用英语怎么说？', answer: 'chores', options: ['chores', 'chairs', 'doctors'], hint: '课本歌谣里出现了 do some chores。', item: word('chores', 'chores', '家务') },
+        { id: 'pep4a-u1-l1-e2', stage: 'practice', kind: 'choice', prompt: '哪一句是在说“我能帮忙”？', answer: 'Yes, I can.', options: ['Yes, I can.', 'I am a nurse.', 'She has long hair.'], hint: '回答 Can you help? 时使用 can。', item: sentence('yes-i-can', 'Yes, I can.', '是的，我能。') },
+        { id: 'pep4a-u1-l1-e3', stage: 'check', kind: 'typing', prompt: '补全：Yes, I ___.', answer: 'can', hint: '回答 Can you help? 时使用 can。', item: sentence('yes-i-can', 'Yes, I can.', '是的，我能。') },
+        { id: 'pep4a-u1-l1-e4', stage: 'check', kind: 'typing', prompt: '写出“家务”：', answer: 'chores', hint: '想一想 do some ...。', item: word('chores', 'chores', '家务') },
       ],
     }),
     lesson({
@@ -86,8 +88,10 @@ export const pepGrade4UpperUnit1: CurriculumUnit = {
       sentences: [sentence('whats-job', "What's your mother's job?", '你妈妈是做什么工作的？'), sentence('shes-doctor', "She's a doctor.", '她是一名医生。')],
       phonics: [], explanation: '用 What’s ... job? 询问职业，再用 He’s/She’s ... 回答。',
       exercises: [
-        { id: 'pep4a-u1-l2-e1', kind: 'choice', prompt: '护士是哪个单词？', answer: 'nurse', options: ['farmer', 'nurse', 'doctor'], hint: '照顾病人的职业。', item: jobs[1] },
-        { id: 'pep4a-u1-l2-e2', kind: 'typing', prompt: "补全：She's a ___.", answer: 'doctor', hint: '课本对话中妈妈是一名医生。', item: jobs[2] },
+        { id: 'pep4a-u1-l2-e1', stage: 'practice', kind: 'choice', prompt: '护士是哪个单词？', answer: 'nurse', options: ['farmer', 'nurse', 'doctor'], hint: '照顾病人的职业。', item: jobs[1] },
+        { id: 'pep4a-u1-l2-e2', stage: 'practice', kind: 'choice', prompt: '哪一句是在介绍朋友的职业？', answer: "She's a doctor.", options: ["She's a doctor.", 'Can you help?', 'I can cook.'], hint: '用 She is 或 She’s 来介绍她的职业。', item: sentence('shes-doctor', "She's a doctor.", '她是一名医生。') },
+        { id: 'pep4a-u1-l2-e3', stage: 'check', kind: 'typing', prompt: "补全：She's a ___.", answer: 'doctor', hint: '课本对话中妈妈是一名医生。', item: jobs[2] },
+        { id: 'pep4a-u1-l2-e4', stage: 'check', kind: 'typing', prompt: "补全：What's your mother's __?", answer: 'job', hint: '用这个词询问职业。', item: sentence('whats-job', "What's your mother's job?", '你妈妈是做什么工作的？') },
       ],
     }),
     lesson({
@@ -95,8 +99,10 @@ export const pepGrade4UpperUnit1: CurriculumUnit = {
       pageReferences: [6], durationMinutes: 10, concepts: ['phonics-ch'], vocabulary: [], sentences: [], phonics: chWords,
       explanation: '在 Chinese、chair、child、lunch、teacher 和 kitchen 中寻找 ch 的发音。',
       exercises: [
-        { id: 'pep4a-u1-l3-e1', kind: 'choice', prompt: '哪个单词含有 ch？', answer: 'chair', options: ['chair', 'farmer', 'nurse'], hint: '观察单词的开头。', item: chWords[1] },
-        { id: 'pep4a-u1-l3-e2', kind: 'typing', prompt: '补全单词：__ild', answer: 'ch', hint: '孩子是 child。', item: chWords[2] },
+        { id: 'pep4a-u1-l3-e1', stage: 'practice', kind: 'choice', prompt: '哪个单词含有 ch？', answer: 'chair', options: ['chair', 'farmer', 'nurse'], hint: '观察单词的开头。', item: chWords[1] },
+        { id: 'pep4a-u1-l3-e2', stage: 'practice', kind: 'choice', prompt: '哪个词里有 ch 的发音？', answer: 'lunch', options: ['lunch', 'farmer', 'nurse'], hint: '看一看单词中间。', item: chWords[3] },
+        { id: 'pep4a-u1-l3-e3', stage: 'check', kind: 'typing', prompt: '补全单词：__ild', answer: 'ch', hint: '孩子是 child。', item: chWords[2] },
+        { id: 'pep4a-u1-l3-e4', stage: 'check', kind: 'typing', prompt: '补全单词：tea__er', answer: 'ch', hint: '老师是 teacher。', item: chWords[4] },
       ],
     }),
     lesson({
@@ -105,8 +111,10 @@ export const pepGrade4UpperUnit1: CurriculumUnit = {
       sentences: [sentence('i-can-cook', 'I can cook.', '我会做饭。'), sentence('we-can-chores', 'We can do some chores.', '我们可以做一些家务。')],
       phonics: [], explanation: '用 I can ... 说一说自己能为家人做什么。',
       exercises: [
-        { id: 'pep4a-u1-l4-e1', kind: 'choice', prompt: '“扫地”是哪一个表达？', answer: 'sweep the floor', options: ['look after', 'sweep the floor', 'office worker'], hint: 'sweep 表示“扫”。', item: chores[2] },
-        { id: 'pep4a-u1-l4-e2', kind: 'typing', prompt: '补全：I can ___ for my family.', answer: 'cook', hint: '做饭是 cook。', item: chores[0] },
+        { id: 'pep4a-u1-l4-e1', stage: 'practice', kind: 'choice', prompt: '“扫地”是哪一个表达？', answer: 'sweep the floor', options: ['look after', 'sweep the floor', 'office worker'], hint: 'sweep 表示“扫”。', item: chores[2] },
+        { id: 'pep4a-u1-l4-e2', stage: 'practice', kind: 'choice', prompt: '哪一句在说“我会做饭”？', answer: 'I can cook.', options: ['I can cook.', 'She is a nurse.', 'He has short hair.'], hint: '用 I can 加动作。', item: sentence('i-can-cook', 'I can cook.', '我会做饭。') },
+        { id: 'pep4a-u1-l4-e3', stage: 'check', kind: 'typing', prompt: '补全：I can ___ for my family.', answer: 'cook', hint: '做饭是 cook。', item: chores[0] },
+        { id: 'pep4a-u1-l4-e4', stage: 'check', kind: 'typing', prompt: '补全：We can do some ___.', answer: 'chores', hint: '家务是 chores。', item: sentence('we-can-chores', 'We can do some chores.', '我们可以做一些家务。') },
       ],
     }),
     lesson({
@@ -115,8 +123,10 @@ export const pepGrade4UpperUnit1: CurriculumUnit = {
       sentences: [sentence('mum-great-nurse', 'You are a great nurse.', '你是一位很棒的护士。'), sentence('look-after-sister', 'I can look after my baby sister.', '我能照顾我的小妹妹。')],
       phonics: [], explanation: '读懂小林和妈妈的便条，找出妈妈的职业和小林能做的家务。',
       exercises: [
-        { id: 'pep4a-u1-l5-e1', kind: 'choice', prompt: "What's the mother's job?", answer: 'nurse', options: ['nurse', 'farmer', 'office worker'], hint: '便条开头写着 You are a great nurse。', item: jobs[1] },
-        { id: 'pep4a-u1-l5-e2', kind: 'typing', prompt: '补全：I can look ___ my baby sister.', answer: 'after', hint: 'look after 表示“照顾”。', item: chores[1] },
+        { id: 'pep4a-u1-l5-e1', stage: 'practice', kind: 'choice', prompt: "What's the mother's job?", answer: 'nurse', options: ['nurse', 'farmer', 'office worker'], hint: '便条开头写着 You are a great nurse。', item: jobs[1] },
+        { id: 'pep4a-u1-l5-e2', stage: 'practice', kind: 'choice', prompt: '“照顾”是哪一个表达？', answer: 'look after', options: ['look after', 'sweep the floor', 'cook'], hint: 'look after 表示照顾。', item: chores[1] },
+        { id: 'pep4a-u1-l5-e3', stage: 'check', kind: 'typing', prompt: '补全：I can look ___ my baby sister.', answer: 'after', hint: 'look after 表示“照顾”。', item: chores[1] },
+        { id: 'pep4a-u1-l5-e4', stage: 'check', kind: 'typing', prompt: '补全：You are a great ___.', answer: 'nurse', hint: '便条里夸妈妈是一位很棒的护士。', item: sentence('mum-great-nurse', 'You are a great nurse.', '你是一位很棒的护士。') },
       ],
     }),
     lesson({
@@ -125,8 +135,10 @@ export const pepGrade4UpperUnit1: CurriculumUnit = {
       sentences: [sentence('happy-family', 'I have a happy family.', '我有一个幸福的家庭。'), sentence('cook-together', 'We often cook together.', '我们经常一起做饭。')],
       phonics: chWords, explanation: '做一张家庭海报，用本单元的职业和家务表达介绍家人，并完成自评。',
       exercises: [
-        { id: 'pep4a-u1-l6-e1', kind: 'self_check', prompt: '我能用英语说出家人的职业。', answer: 'yes', options: ['yes'], hint: '想一想 What’s your mother’s job? 应该怎样回答。' },
-        { id: 'pep4a-u1-l6-e2', kind: 'typing', prompt: '补全：We often ___ together.', answer: 'cook', hint: '用本单元学过的一项家庭活动完成句子。', item: sentence('cook-together', 'We often cook together.', '我们经常一起做饭。') },
+        { id: 'pep4a-u1-l6-e1', stage: 'practice', kind: 'self_check', prompt: '我能用英语说出家人的职业。', answer: 'yes', options: ['yes'], hint: '想一想 What’s your mother’s job? 应该怎样回答。' },
+        { id: 'pep4a-u1-l6-e2', stage: 'practice', kind: 'self_check', prompt: '我能用 I can 说一件自己能做的家务。', answer: 'yes', options: ['yes'], hint: '可以试试 I can cook.。' },
+        { id: 'pep4a-u1-l6-e3', stage: 'check', kind: 'typing', prompt: '补全：We often ___ together.', answer: 'cook', hint: '用本单元学过的一项家庭活动完成句子。', item: sentence('cook-together', 'We often cook together.', '我们经常一起做饭。') },
+        { id: 'pep4a-u1-l6-e4', stage: 'check', kind: 'typing', prompt: '补全：I have a happy ___.', answer: 'family', hint: '家人组成 family。', item: sentence('happy-family', 'I have a happy family.', '我有一个幸福的家庭。') },
       ],
     }),
   ],

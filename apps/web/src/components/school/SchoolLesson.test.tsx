@@ -31,11 +31,33 @@ describe('SchoolLesson', () => {
     fireEvent.click(screen.getByRole('button', { name: '开始练习' }));
     fireEvent.click(screen.getByRole('button', { name: 'nurse' }));
     fireEvent.click(screen.getByRole('button', { name: '检查答案' }));
+    fireEvent.click(screen.getByRole('button', { name: '下一题' }));
+    fireEvent.click(screen.getByRole('button', { name: "She's a doctor." }));
+    fireEvent.click(screen.getByRole('button', { name: '检查答案' }));
     fireEvent.click(screen.getByRole('button', { name: '去做小检查' }));
     fireEvent.change(screen.getByLabelText('填写答案'), { target: { value: 'doctor' } });
+    fireEvent.click(screen.getByRole('button', { name: '检查答案' }));
+    fireEvent.click(screen.getByRole('button', { name: '下一题' }));
+    fireEvent.change(screen.getByLabelText('填写答案'), { target: { value: 'job' } });
     fireEvent.click(screen.getByRole('button', { name: '检查答案' }));
     fireEvent.click(screen.getByRole('button', { name: '完成本课' }));
 
     expect(complete).toHaveBeenCalledWith(lesson);
+  });
+
+  it('moves through two practice questions before revealing the small check', () => {
+    const lesson = getLessonById('pep4a-u1-l2')!;
+
+    render(<SchoolLesson lesson={lesson} onRecordExercise={vi.fn()} onComplete={vi.fn()} onBack={vi.fn()} storageError="" />);
+
+    fireEvent.click(screen.getByRole('button', { name: '开始练习' }));
+    expect(screen.getByText('第 1 / 2 题')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'nurse' }));
+    fireEvent.click(screen.getByRole('button', { name: '检查答案' }));
+    fireEvent.click(screen.getByRole('button', { name: '下一题' }));
+
+    expect(screen.getByText('第 2 / 2 题')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '哪一句是在介绍朋友的职业？' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '去做小检查' })).not.toBeInTheDocument();
   });
 });

@@ -10,6 +10,7 @@ export type SchoolLearningItem = {
 
 export type SchoolExercise = {
   id: string;
+  stage: 'practice' | 'check';
   kind: 'choice' | 'typing' | 'self_check';
   prompt: string;
   answer: string;
