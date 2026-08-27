@@ -161,7 +161,7 @@ _dino_episode = EpisodeDetail(
     vocab=[
         Vocab(id="vocab-park", word="park", phonetic="/pɑːk/", meaning="公园"),
         Vocab(id="vocab-dinosaur", word="dinosaur", phonetic="/ˈdaɪ.nə.sɔːr/", meaning="恐龙"),
-        Vocab(id="vocab-other", word="other", phonetic="/ˈʌð.ər/", meaning="其他的"),
+        Vocab(id="vocab-other", word="other", phonetic="/ˈʌð.ə/", meaning="其他的"),
         Vocab(id="vocab-run-away", word="run away", phonetic="/rʌn əˈweɪ/", meaning="跑开；逃走"),
         Vocab(id="vocab-friend", word="friend", phonetic="/frend/", meaning="朋友"),
         Vocab(id="vocab-afraid", word="afraid", phonetic="/əˈfreɪd/", meaning="害怕的"),
