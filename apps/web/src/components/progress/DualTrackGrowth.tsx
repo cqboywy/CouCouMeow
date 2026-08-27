@@ -5,6 +5,7 @@ import type { SchoolProgressSummary, SchoolReviewItem } from '../../progress/sch
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';
 import { GrowthRecord } from './GrowthRecord';
+import { getLessonById, getUnitById } from '../../curriculum/pepGrade4UpperUnit1';
 
 type Track = 'school' | 'extra' | 'overview';
 
@@ -19,6 +20,11 @@ export function DualTrackGrowth({ school, extra, onStartSchool, onStartExtra, on
   const [track, setTrack] = useState<Track>('school');
   const schoolWords = school.masteredItems.filter(item => item.kind === 'word').length;
   const schoolSentences = school.masteredItems.filter(item => item.kind === 'sentence').length;
+  const lessonLabel = (lessonId: string) => {
+    const lesson = getLessonById(lessonId);
+    const unit = lesson ? getUnitById(lesson.unitId) : undefined;
+    return unit && lesson ? `Unit ${unit.sequence} · ${unit.title} · 第 ${lesson.sequence} 课` : '来自校内同步教材';
+  };
   return <section className="dual-growth" aria-labelledby="dual-growth-title">
     <header className="section-heading">
       <p className="eyebrow"><Sparkles size={18} /> MY TWO LEARNING PATHS</p>
@@ -38,7 +44,7 @@ export function DualTrackGrowth({ school, extra, onStartSchool, onStartExtra, on
         <Surface className="stat"><strong>{school.reviewItems.length}<small>项</small></strong><span>校内待复习</span></Surface>
       </div>
       {school.reviewItems.length > 0 && <Surface className="school-growth__review"><h3>校内需要再抱抱的小难题</h3>{school.reviewItems.map(item => <button key={item.id} type="button" onClick={() => onSchoolReview?.(item)}><strong lang="en">{item.english}</strong><span>{item.chinese}</span></button>)}</Surface>}
-      <Surface className="school-growth__collection"><p className="eyebrow"><BookOpen size={18} /> PEP 四年级上册</p><h3>校内学会的内容</h3>{school.masteredItems.length ? <div>{school.masteredItems.map(item => <article key={item.id}><strong lang="en">{item.english}</strong><span>{item.chinese}</span><small>来自 Unit 1 · 第 {Number(item.lessonId.at(-1))} 课</small></article>)}</div> : <div className="growth-empty"><p>还没有完成的校内课时。</p><Button onClick={onStartSchool}>开始校内学习</Button></div>}</Surface>
+      <Surface className="school-growth__collection"><p className="eyebrow"><BookOpen size={18} /> PEP 四年级上册</p><h3>校内学会的内容</h3>{school.masteredItems.length ? <div>{school.masteredItems.map(item => <article key={item.id}><strong lang="en">{item.english}</strong><span>{item.chinese}</span><small>{lessonLabel(item.lessonId)}</small></article>)}</div> : <div className="growth-empty"><p>还没有完成的校内课时。</p><Button onClick={onStartSchool}>开始校内学习</Button></div>}</Surface>
     </div>}
     {track === 'extra' && <GrowthRecord summary={extra} onStartLearning={onStartExtra} onReviewItem={onExtraReview} />}
     {track === 'overview' && <div className="dual-growth__overview">

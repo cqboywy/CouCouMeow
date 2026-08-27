@@ -24,6 +24,7 @@ describe('DualTrackGrowth', () => {
 
     expect(screen.getByRole('tab', { name: '校内成长' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByText('已完成课时')).toBeInTheDocument();
+    expect(screen.getByText('Unit 1 · Helping at home · 第 1 课')).toBeInTheDocument();
     expect(screen.queryByText('已学剧集')).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('tab', { name: '课外成长' }));
