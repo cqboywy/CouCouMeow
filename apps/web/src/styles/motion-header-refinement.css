@@ -3,3 +3,11 @@
 @media(max-width:760px){
   .motion-home__nav .brand__name{font-size:1.1rem}
 }
+
+.motion-home__journey{padding:28px clamp(18px,3vw,36px) 48px;background:#f2eee8}
+.motion-home__journey .motion-task-tray{border-radius:26px}
+
+@media(max-width:760px){
+  .motion-home__journey{padding:22px 8px 36px}
+  .motion-home__journey .motion-task-tray{border-radius:22px}
+}

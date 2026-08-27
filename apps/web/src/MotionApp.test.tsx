@@ -37,6 +37,7 @@ describe('motion interface', () => {
     expect(screen.getByRole('navigation', { name: '首页内容' })).toBeInTheDocument();
     expect(screen.queryByText('今天的英语故事')).not.toBeInTheDocument();
     expect(screen.queryByText('第 1 集')).not.toBeInTheDocument();
+    expect(screen.getByRole('region', { name: '今日学习路径' })).toBeInTheDocument();
   });
 
   it('keeps the bookshelf and progress destinations usable', async () => {
