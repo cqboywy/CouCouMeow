@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { App } from './App';
+import { App, shouldUseMotionInterface } from './App';
 
 const episode = {
   id: 'l1-001-dino-buddies-the-park',
@@ -19,6 +19,12 @@ afterEach(() => {
 });
 
 describe('motion interface', () => {
+  it('uses the motion interface by default for a hosted Netlify preview', () => {
+    expect(shouldUseMotionInterface(new URLSearchParams(), 'coucoumiao.netlify.app', '')).toBe(true);
+    expect(shouldUseMotionInterface(new URLSearchParams('ui=classic'), 'coucoumiao.netlify.app', '')).toBe(false);
+    expect(shouldUseMotionInterface(new URLSearchParams(), 'localhost', '')).toBe(false);
+  });
+
   it('uses the glass panel surface for the bookshelf and growth destinations', async () => {
     window.history.replaceState(null, '', '/?ui=motion');
     vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
