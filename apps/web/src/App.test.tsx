@@ -60,6 +60,7 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: '恐龙伙伴：公园奇遇' })).toBeInTheDocument();
     expect(screen.getByText('Rex 想和其他恐龙交朋友，却被大家误会了。')).toBeInTheDocument();
     expect(screen.getByText('完整台词（1句）')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '开始单词听写' })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button', { name: '朗读句子：One day Rex was in the park.' })[0]);
     expect(screen.getByRole('status')).toHaveTextContent('这台设备暂时不能朗读英文');
     vi.unstubAllGlobals();

@@ -65,7 +65,7 @@ function Content({episode,change,markPattern}:{episode:Detail;change:(v:View)=>v
         <p className="card-kicker">听一听，点一点</p><h2>单词花园</h2><p className="card-intro">先认识最常用的 6 个，剩下的需要时再展开。</p>
         <div className="vocab-list">{episode.vocab.slice(0,6).map(vocab=><VocabRow key={vocab.id} vocab={vocab}/>)}</div>
         {episode.vocab.length>6&&<details className="disclosure"><summary>看看另外 {episode.vocab.length-6} 个单词</summary><div className="vocab-list">{episode.vocab.slice(6).map(vocab=><VocabRow key={vocab.id} vocab={vocab}/>)}</div></details>}
-        <Button onClick={()=>change('dictation')}>去单词听写</Button>
+        <div className="word-garden__action"><Button aria-label="开始单词听写" onClick={()=>change('dictation')}>去单词听写</Button></div>
       </Surface>
       <Surface className="pattern-card">
         <p className="card-kicker">会替换，就会造句</p><h2>句型小魔法</h2><p className="card-intro">每次打开一个句型，读完例句再试着换一个词。</p>
