@@ -145,6 +145,8 @@ describe('App', () => {
     expect(screen.getByText('树')).toBeInTheDocument();
     expect(previous).toBeEnabled();
     fireEvent.click(screen.getByRole('button', { name: '3. 句子跟读' }));
+    expect(screen.getByRole('button', { name: '完成本句跟读' })).toBeDisabled();
+    expect(screen.queryByText('录音后会自动识别；也可以在这里修正文字')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: '上一题' })).toBeDisabled();
     expect(screen.getByText('第 1 / 2 题')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: '下一题' }));
