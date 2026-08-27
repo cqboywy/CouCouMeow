@@ -19,6 +19,25 @@ afterEach(() => {
 });
 
 describe('motion interface', () => {
+  it('uses the glass panel surface for the bookshelf and growth destinations', async () => {
+    window.history.replaceState(null, '', '/?ui=motion');
+    vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      const body = url.endsWith('/episodes')
+        ? { items: [episode] }
+        : { learned_episodes: 2, total_words: 17, practice_count: 5, mistake_count: 1 };
+      return { ok: true, json: async () => body };
+    }));
+
+    render(<App />);
+
+    fireEvent.click(await screen.findByRole('button', { name: '剧集书架' }));
+    expect(screen.getByRole('heading', { name: '动画学习小书架' }).closest('.motion-home__panel--glass')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: '成长记录' }));
+    expect(screen.getByRole('heading', { name: '我的成长记录' }).closest('.motion-home__panel--glass')).toBeInTheDocument();
+  });
+
   it('opens the independent cloud story stage from the ui query', async () => {
     window.history.replaceState(null, '', '/?ui=motion');
     vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
