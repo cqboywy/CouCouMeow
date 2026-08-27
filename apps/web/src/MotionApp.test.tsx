@@ -33,11 +33,12 @@ describe('motion interface', () => {
 
     expect(await screen.findByRole('region', { name: '今日英语故事舞台' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '今天，一起走进英语故事' })).toHaveClass('motion-heading');
-    expect(screen.getByRole('button', { name: /继续学习 The Park/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /开始学习 The Park/ })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: '首页内容' })).toBeInTheDocument();
     expect(screen.queryByText('今天的英语故事')).not.toBeInTheDocument();
     expect(screen.queryByText('第 1 集')).not.toBeInTheDocument();
     expect(screen.getByRole('region', { name: '今日学习路径' })).toBeInTheDocument();
+    expect(screen.getByText('先看懂故事，再练单词，最后勇敢开口。').closest('[aria-label="今日学习路径"]')).toBeInTheDocument();
   });
 
   it('keeps the bookshelf and progress destinations usable', async () => {

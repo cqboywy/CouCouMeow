@@ -1,4 +1,5 @@
 .motion-home__nav .brand__name{font-size:1.24rem;line-height:1.1}
+.motion-home__nav{background:rgb(255 254 253 / 82%)}
 
 @media(max-width:760px){
   .motion-home__nav .brand__name{font-size:1.1rem}
@@ -6,6 +7,7 @@
 
 .motion-home__journey{padding:28px clamp(18px,3vw,36px) 48px;background:#f2eee8}
 .motion-home__journey .motion-task-tray{border-radius:26px}
+.motion-task-tray__intro{margin:8px 0 0;color:var(--color-muted);font-size:.96rem;font-weight:500;line-height:1.55;text-wrap:pretty}
 
 @media(max-width:760px){
   .motion-home__journey{padding:22px 8px 36px}
