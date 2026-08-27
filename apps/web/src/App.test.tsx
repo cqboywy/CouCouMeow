@@ -102,4 +102,31 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'They ran away.' })).toBeInTheDocument();
     vi.unstubAllGlobals();
   });
+
+  it('shows dictation feedback immediately below the submitted answer', async () => {
+    const episode = {
+      id: 'l1-bat-and-friends-002-lost-in-the-rain', level: 1, series_title: 'Bat and Friends', episode_number: 2, title: 'Lost in the Rain',
+      chinese_title: '蝙蝠和朋友们：雨中迷路', local_video_filename: '002_Bat and Friends 2_Lost in the Rain.mp4', story_summary: '故事简介', story_theme: '故事主题', is_published: true, is_learned: false,
+      sentences: [{ id: 'bat-2-sentence-1', english: 'I am wet.', chinese: '我湿了。', is_featured: true }],
+      vocab: [{ id: 'bat-2-vocab-wet', word: 'wet', phonetic: '/wet/', meaning: '湿的' }],
+      knowledge: [], comprehension_questions: [], retell_steps: [], past_tense_pairs: [],
+    };
+    vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      const body = url.endsWith('/episodes') ? { items: [episode] } : url.endsWith('/stats') ? { learned_episodes: 0, total_words: 1, practice_count: 0, mistake_count: 0 } : url.endsWith('/practice/dictation') ? { attempt_id: 'wet-attempt', is_correct: true, message: '太棒啦，这个单词被你抓住了！', similarity: null } : episode;
+      return { ok: true, json: async () => body };
+    }));
+    render(<App />);
+    fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
+    fireEvent.click(await screen.findByRole('button', { name: '2. 单词听写' }));
+    fireEvent.change(screen.getByLabelText('我写的是'), { target: { value: 'wet' } });
+    fireEvent.click(screen.getByRole('button', { name: '交给凑凑喵检查' }));
+
+    const feedback = await screen.findByRole('status');
+    const navigator = screen.getByRole('navigation', { name: '题目切换' });
+    expect(feedback).toHaveTextContent('太棒啦，这个单词被你抓住了！');
+    expect(feedback).not.toHaveTextContent('相似度：0%');
+    expect(feedback.compareDocumentPosition(navigator) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    vi.unstubAllGlobals();
+  });
 });
