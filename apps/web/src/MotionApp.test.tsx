@@ -35,6 +35,8 @@ describe('motion interface', () => {
     expect(screen.getByRole('heading', { name: '今天，一起走进英语故事' })).toHaveClass('motion-heading');
     expect(screen.getByRole('button', { name: /继续学习 The Park/ })).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: '首页内容' })).toBeInTheDocument();
+    expect(screen.queryByText('今天的英语故事')).not.toBeInTheDocument();
+    expect(screen.queryByText('第 1 集')).not.toBeInTheDocument();
   });
 
   it('keeps the bookshelf and progress destinations usable', async () => {

@@ -1,0 +1,5 @@
+.motion-home__nav .brand__name{font-size:1.24rem;line-height:1.1}
+
+@media(max-width:760px){
+  .motion-home__nav .brand__name{font-size:1.1rem}
+}
