@@ -1,4 +1,4 @@
-import { pepGrade4Upper, pepGrade4UpperUnit1 } from '../curriculum/pepGrade4UpperUnit1';
+import { getLessonById, pepGrade4Upper } from '../curriculum/pepGrade4UpperUnit1';
 import type { SchoolLearningItem } from '../curriculum/types';
 
 export const SCHOOL_PROGRESS_STORAGE_KEY = 'coucoumeow.school-progress.v1';
@@ -61,7 +61,7 @@ export type SchoolExerciseResult = {
   correct: boolean;
 };
 
-const orderedLessonIds = pepGrade4UpperUnit1.lessons.map(lesson => lesson.id);
+const orderedLessonIds = pepGrade4Upper.units.flatMap(unit => unit.lessons).map(lesson => lesson.id);
 const localDay = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 
 export function createSchoolProgressRepository(storage: Storage, now: () => Date) {
@@ -87,7 +87,7 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
       occurredAt: date.toISOString(),
       day: localDay(date),
       textbookId: record.selectedTextbookId,
-      unitId: pepGrade4UpperUnit1.id,
+      unitId: getLessonById(event.lessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
     });
     write(record);
   };
@@ -139,7 +139,7 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
     const currentLessonId = orderedLessonIds.find(id => !completedLessonIds.includes(id)) ?? orderedLessonIds.at(-1)!;
     return {
       textbookId: record.selectedTextbookId,
-      unitId: pepGrade4UpperUnit1.id,
+      unitId: getLessonById(currentLessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
       completedLessonIds,
       currentLessonId,
       practiceCount: record.events.filter(event => event.type === 'exercise').length,

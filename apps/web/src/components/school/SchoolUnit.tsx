@@ -1,17 +1,17 @@
 import { BookOpen, CheckCircle2, ChevronRight } from 'lucide-react';
-import { pepGrade4UpperUnit1 } from '../../curriculum/pepGrade4UpperUnit1';
-import type { CurriculumLesson } from '../../curriculum/types';
+import type { CurriculumLesson, CurriculumUnit } from '../../curriculum/types';
 
-export function SchoolUnit({ completedLessonIds, currentLessonId, onOpenLesson }: { completedLessonIds: string[]; currentLessonId: string; onOpenLesson: (lesson: CurriculumLesson) => void }) {
+export function SchoolUnit({ unit, completedLessonIds, currentLessonId, onOpenLesson }: { unit: CurriculumUnit; completedLessonIds: string[]; currentLessonId: string; onOpenLesson: (lesson: CurriculumLesson) => void }) {
+  const completedCount = unit.lessons.filter(lesson => completedLessonIds.includes(lesson.id)).length;
   return <section className="school-unit" aria-labelledby="school-unit-title">
     <header className="school-unit__heading">
       <p className="eyebrow"><BookOpen size={18} /> PEP 四年级上册</p>
-      <h2 id="school-unit-title">Unit 1 Helping at home</h2>
-      <p>{pepGrade4UpperUnit1.bigQuestion} <span>{pepGrade4UpperUnit1.bigQuestionChinese}</span></p>
-      <small>已完成 {completedLessonIds.length}/6 课时</small>
+      <h2 id="school-unit-title">Unit {unit.sequence} {unit.title}</h2>
+      <p>{unit.bigQuestion} <span>{unit.bigQuestionChinese}</span></p>
+      <small>本单元已完成 {completedCount}/{unit.lessons.length} 课时</small>
     </header>
     <div className="school-unit__lessons">
-      {pepGrade4UpperUnit1.lessons.map(lesson => {
+      {unit.lessons.map(lesson => {
         const completed = completedLessonIds.includes(lesson.id);
         const current = lesson.id === currentLessonId;
         return <article className={current ? 'current' : completed ? 'completed' : ''} key={lesson.id}>

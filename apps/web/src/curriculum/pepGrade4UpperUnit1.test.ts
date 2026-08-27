@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getLessonById, pepGrade4Upper, pepGrade4UpperUnit1 } from './pepGrade4UpperUnit1';
+import { getLessonById, pepGrade4Upper, pepGrade4UpperUnit1, pepGrade4UpperUnit2 } from './pepGrade4UpperUnit1';
 
 describe('PEP Grade 4 upper Unit 1 curriculum', () => {
   it('provides six ordered lessons that each complete the same simple three-step flow', () => {
@@ -25,5 +25,14 @@ describe('PEP Grade 4 upper Unit 1 curriculum', () => {
     expect(getLessonById('pep4a-u1-l3')?.phonics.map(item => item.english)).toEqual(
       expect.arrayContaining(['Chinese', 'chair', 'child', 'lunch']),
     );
+  });
+
+  it('includes Unit 2 My friends as six ready-to-practice lessons', () => {
+    expect(pepGrade4Upper.units.map(unit => unit.title)).toEqual(['Helping at home', 'My friends']);
+    expect(pepGrade4UpperUnit2.lessons).toHaveLength(6);
+    expect(pepGrade4UpperUnit2.lessons[0]?.pageReferences).toEqual([14, 15]);
+    expect(getLessonById('pep4a-u2-l4')?.title).toBe('我和好朋友一起做什么');
+    expect(pepGrade4UpperUnit2.lessons.every(lesson => lesson.exercises.filter(item => item.stage === 'practice').length === 2)).toBe(true);
+    expect(pepGrade4UpperUnit2.lessons.every(lesson => lesson.exercises.filter(item => item.stage === 'check').length === 2)).toBe(true);
   });
 });
