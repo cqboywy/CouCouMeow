@@ -41,7 +41,7 @@ export function SchoolLesson({ lesson, initialStep = 'learn', onRecordExercise, 
   const stage = step === 2 ? 'check' : 'practice';
   const exercises = lesson.exercises.filter(item => item.stage === stage);
   const exercise = exercises[questionIndex] ?? exercises[0];
-  const moveTo = (next: 1 | 2) => { setStep(next); setQuestionIndex(0); setAnswer(''); setFeedback(''); setCorrect(false); };
+  const moveTo = (next: 0 | 1 | 2) => { setStep(next); setQuestionIndex(0); setAnswer(''); setFeedback(''); setCorrect(false); };
   const moveToNextQuestion = () => { setQuestionIndex(index => index + 1); setAnswer(''); setFeedback(''); setCorrect(false); };
   const isFinalQuestion = questionIndex === exercises.length - 1;
   const check = () => {
@@ -60,9 +60,9 @@ export function SchoolLesson({ lesson, initialStep = 'learn', onRecordExercise, 
       <span><BookOpen size={18} /> 请打开课本第 {lesson.pageReferences.join('–')} 页 · 约 {lesson.durationMinutes} 分钟</span>
     </header>
     <nav className="school-stepper" aria-label="本课学习步骤">
-      {lesson.steps.map((item, index) => <span key={item.kind} aria-current={step === index ? 'step' : undefined}>
+      {lesson.steps.map((item, index) => <button key={item.kind} type="button" aria-current={step === index ? 'step' : undefined} onClick={() => moveTo(index as 0 | 1 | 2)}>
         <b>{index + 1}</b>{item.title}
-      </span>)}
+      </button>)}
     </nav>
     {step === 0 ? <Surface className="school-lesson__content">
       <p className="school-kicker">先认识，再开口</p>

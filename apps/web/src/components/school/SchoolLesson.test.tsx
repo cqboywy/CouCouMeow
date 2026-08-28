@@ -68,4 +68,15 @@ describe('SchoolLesson', () => {
     expect(screen.getByText('PEP 四年级上册 · Unit 2 · 第 1 课')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '回到 Unit 2' })).toBeInTheDocument();
   });
+
+  it('opens practice and the small check directly from the step buttons', () => {
+    const lesson = getLessonById('pep4a-u1-l1')!;
+    render(<SchoolLesson lesson={lesson} onRecordExercise={vi.fn()} onComplete={vi.fn()} onBack={vi.fn()} storageError="" />);
+
+    fireEvent.click(screen.getByRole('button', { name: '2 练一练' }));
+    expect(screen.getByText('“家务”用英语怎么说？')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: '3 小检查' }));
+    expect(screen.getByText('补全：Yes, I ___.')).toBeInTheDocument();
+  });
 });
