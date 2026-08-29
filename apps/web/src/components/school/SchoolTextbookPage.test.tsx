@@ -24,4 +24,15 @@ describe('SchoolTextbookPage', () => {
     expect(screen.getAllByText('这些孩子在家怎样帮忙？')[0]).toBeVisible();
     expect(screen.queryByRole('button', { name: '完成本页' })).not.toBeInTheDocument();
   });
+
+  it('先显示开口挑战入口和本页收尾，再在点击后开始抽查', () => {
+    render(<SchoolTextbookPage page={page} {...props} />);
+
+    expect(screen.getByText('读完了，试着不用看英文说出来。')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '开始开口挑战' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '这一页，我能做到' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: '开始开口挑战' }));
+    expect(screen.getByText('开口挑战 · 看中文，说英文 · 第 1/3 题')).toBeInTheDocument();
+  });
 });

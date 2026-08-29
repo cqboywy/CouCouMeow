@@ -61,7 +61,7 @@ describe('motion interface', () => {
     fireEvent.click(screen.getByRole('button', { name: /开始学习/ }));
     expect(screen.getByRole('heading', { name: '在家帮忙' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '本页重点' })).toBeInTheDocument();
-    expect(screen.getByText('开口挑战 · 看中文，说英文 · 第 1/3 题')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '开始开口挑战' })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: '回到 Unit 1' }));
 
