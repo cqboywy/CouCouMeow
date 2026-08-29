@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { App, applyLocalEpisodeStatus, selectVisibleProgress } from './App';
+import { App, applyLocalEpisodeStatus, getSchoolReviewDestination, selectVisibleProgress } from './App';
 import type { GrowthSummary } from './progress/localProgressRepository';
 
 const episode = {
@@ -30,6 +30,10 @@ describe('motion interface', () => {
     const summary = { today: { day: '2026-08-29', practiceCount: 0, newWords: [], newSentences: [], newPatterns: [], newEpisodes: [] }, days: [], items: { words: [], sentences: [], patterns: [], episodes: [{ id: episode.id, kind: 'episode', english: episode.title, chinese: '', episodeId: episode.id, firstLearnedDay: '2026-08-29', latestPracticeDay: '2026-08-29', correctCount: 1, totalPracticeCount: 1 }] }, reviewItems: [] } satisfies GrowthSummary;
 
     expect(applyLocalEpisodeStatus([episode], summary)[0]?.is_learned).toBe(true);
+  });
+
+  it('returns a page destination for a school check that needs review', () => {
+    expect(getSchoolReviewDestination({ pageId: 'pep4a-u1-p3' })).toEqual({ type: 'page', id: 'pep4a-u1-p3' });
   });
 
   it('opens a simple school-first stage from the ui query', async () => {

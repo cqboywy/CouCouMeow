@@ -66,6 +66,16 @@ describe('school progress repository', () => {
     expect(memory.getItem(PROGRESS_STORAGE_KEY)).toBeNull();
   });
 
+  it('puts an incorrect page check into the school review queue with its page location', () => {
+    const repo = createSchoolProgressRepository(memory, () => new Date('2026-08-27T09:00:00'));
+
+    repo.recordPageCheck('pep4a-u1-p3', 'p3-check-clean-room', schoolWord, false);
+
+    expect(repo.getSummary().reviewItems).toEqual([
+      expect.objectContaining({ id: schoolWord.id, pageId: 'pep4a-u1-p3', source: 'school' }),
+    ]);
+  });
+
   it('records Unit 2 page study under Unit 2 rather than Unit 1', () => {
     const repo = createSchoolProgressRepository(memory, () => new Date('2026-08-27T09:00:00'));
 
@@ -74,6 +84,21 @@ describe('school progress repository', () => {
     expect(repo.getSummary().masteredItems).toEqual([
       expect.objectContaining({ lessonId: 'pep4a-u2-l1' }),
     ]);
+  });
+
+  it('continues page learning into Unit 3 and keeps its progress under Unit 3', () => {
+    const repo = createSchoolProgressRepository(memory, () => new Date('2026-08-27T09:00:00'));
+
+    for (let page = 2; page <= 25; page += 1) {
+      const unit = page <= 13 ? 'pep4a-u1' : 'pep4a-u2';
+      repo.completePage(`${unit}-p${page}`, []);
+    }
+    repo.completePage('pep4a-u3-p26', [schoolWord]);
+
+    expect(repo.getSummary()).toMatchObject({ currentPageId: 'pep4a-u3-p27', unitId: 'pep4a-u3' });
+    expect(repo.getSummary().masteredItems).toEqual(expect.arrayContaining([
+      expect.objectContaining({ lessonId: 'pep4a-u3-p26' }),
+    ]));
   });
 
   it('recovers from damaged school progress data', () => {

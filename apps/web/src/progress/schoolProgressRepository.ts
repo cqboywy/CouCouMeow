@@ -1,5 +1,6 @@
 import { getLessonById, getUnitById, pepGrade4Upper } from '../curriculum/pepGrade4UpperUnit1';
 import { getTextbookPageById, getUnitTextbookPages } from '../curriculum/pepGrade4UpperTextbookPages';
+import { pepGrade4UpperTextbookUnits } from '../curriculum/pepGrade4UpperTextbookStructure';
 import type { SchoolLearningItem } from '../curriculum/types';
 
 export const SCHOOL_PROGRESS_STORAGE_KEY = 'coucoumeow.school-progress.v1';
@@ -37,6 +38,7 @@ export type SchoolReviewItem = SchoolLearningItem & {
   source: 'school';
   lessonId: string;
   exerciseId: string;
+  pageId?: string;
 };
 
 export type SchoolLaterReviewItem = SchoolLearningItem & {
@@ -72,10 +74,10 @@ export type SchoolExerciseResult = {
 };
 
 const orderedLessonIds = pepGrade4Upper.units.flatMap(unit => unit.lessons).map(lesson => lesson.id);
-const orderedPageIds = pepGrade4Upper.units.flatMap(unit => getUnitTextbookPages(unit.id)).map(page => page.id);
+const orderedPageIds = pepGrade4UpperTextbookUnits.flatMap(unit => getUnitTextbookPages(unit.id)).map(page => page.id);
 const lessonIdForPage = (pageId: string) => {
   const unitId = getTextbookPageById(pageId)?.unitId;
-  return unitId ? getUnitById(unitId)?.lessons[0]?.id ?? '' : '';
+  return unitId ? getUnitById(unitId)?.lessons[0]?.id ?? pageId : '';
 };
 const localDay = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 
@@ -102,7 +104,7 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
       occurredAt: date.toISOString(),
       day: localDay(date),
       textbookId: record.selectedTextbookId,
-      unitId: getLessonById(event.lessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
+      unitId: getTextbookPageById(event.pageId ?? '')?.unitId ?? getLessonById(event.lessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
     });
     write(record);
   };
@@ -153,11 +155,11 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
     }
     const latestPractice = new Map<string, SchoolEvent>();
     for (const event of record.events) {
-      if (event.type === 'exercise' && event.item) latestPractice.set(event.item.id, event);
+      if ((event.type === 'exercise' || event.type === 'page_check') && event.item) latestPractice.set(event.item.id, event);
     }
     const reviewItems = [...latestPractice.values()]
       .filter(event => event.correct === false && event.item && event.exerciseId)
-      .map(event => ({ ...event.item!, source: 'school' as const, lessonId: event.lessonId, exerciseId: event.exerciseId! }));
+      .map(event => ({ ...event.item!, source: 'school' as const, lessonId: event.lessonId, exerciseId: event.exerciseId!, pageId: event.pageId }));
     const dailyMap = new Map<string, SchoolDailySummary>();
     for (const event of record.events) {
       const daily = dailyMap.get(event.day) ?? { day: event.day, practiceCount: 0, completedLessonCount: 0 };
@@ -176,7 +178,7 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
     }
     return {
       textbookId: record.selectedTextbookId,
-      unitId: getLessonById(currentLessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
+      unitId: getTextbookPageById(currentPageId)?.unitId ?? getLessonById(currentLessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
       completedLessonIds,
       currentLessonId,
       completedPageIds,
