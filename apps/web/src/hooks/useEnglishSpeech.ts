@@ -23,12 +23,16 @@ export function useEnglishSpeech() {
   const attempt = useRef(0);
   const launchTimer = useRef<number | undefined>(undefined);
   const fallbackTimer = useRef<number | undefined>(undefined);
+  const completionTimer = useRef<number | undefined>(undefined);
+  const readyVoice = useRef<SpeechSynthesisVoice | null>(null);
 
   const clearTimers = useCallback(() => {
     if (launchTimer.current !== undefined) window.clearTimeout(launchTimer.current);
     if (fallbackTimer.current !== undefined) window.clearTimeout(fallbackTimer.current);
+    if (completionTimer.current !== undefined) window.clearTimeout(completionTimer.current);
     launchTimer.current = undefined;
     fallbackTimer.current = undefined;
+    completionTimer.current = undefined;
   }, []);
 
   const start = useCallback((text: string, voice: SpeechSynthesisVoice, key: string) => {
@@ -51,7 +55,11 @@ export function useEnglishSpeech() {
       setState({ phase: 'speaking', message: `正在朗读：${text}`, activeText: text, activeKey: key });
     };
     utterance.onend = () => {
-      if (attempt.current === currentAttempt) setState({ phase: 'idle', message: '朗读完成。', activeText: null, activeKey: null });
+      if (attempt.current !== currentAttempt) return;
+      setState({ phase: 'idle', message: '朗读完成。', activeText: null, activeKey: null });
+      completionTimer.current = window.setTimeout(() => {
+        if (attempt.current === currentAttempt) setState({ phase: 'idle', message: '', activeText: null, activeKey: null });
+      }, 1200);
     };
     utterance.onerror = event => {
       if (attempt.current !== currentAttempt || event.error === 'canceled' || event.error === 'interrupted') return;
@@ -74,7 +82,7 @@ export function useEnglishSpeech() {
       setState({ phase: 'error', message: unsupportedMessage, activeText: text, activeKey: key });
       return;
     }
-    const voice = englishVoice();
+    const voice = readyVoice.current ?? englishVoice();
     if (!voice) {
       const currentAttempt = ++attempt.current;
       pendingText.current = text;
@@ -89,6 +97,12 @@ export function useEnglishSpeech() {
     start(text, voice, key);
   }, [clearTimers, start]);
 
+  const preload = useCallback((_texts: string[]) => {
+    if (!('speechSynthesis' in window)) return;
+    const voice = englishVoice();
+    if (voice) readyVoice.current = voice;
+  }, []);
+
   useEffect(() => {
     if (!('speechSynthesis' in window)) return undefined;
     const synthesis = window.speechSynthesis;
@@ -96,6 +110,7 @@ export function useEnglishSpeech() {
       const text = pendingText.current;
       const key = pendingKey.current;
       const voice = englishVoice();
+      if (voice) readyVoice.current = voice;
       if (text && key && voice) start(text, voice, key);
     };
     synthesis.getVoices();
@@ -106,5 +121,5 @@ export function useEnglishSpeech() {
     };
   }, [clearTimers, start]);
 
-  return { ...state, speak };
+  return { ...state, speak, preload };
 }

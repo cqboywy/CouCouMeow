@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight, Volume2 } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { TextbookFocusItem, TextbookPage, TextbookPageCheck } from '../../curriculum/types';
 import { useEnglishSpeech } from '../../hooks/useEnglishSpeech';
 import { Button } from '../ui/Button';
@@ -18,6 +18,7 @@ const normalize = (value: string) => value.trim().toLocaleLowerCase().replace(/[
 
 export function SchoolTextbookPage({ page, onRecordCheck, onComplete, onLaterReview, onBack, onOpenNext }: Props) {
   const speech = useEnglishSpeech();
+  const pageEnglish = useMemo(() => page.sections.flatMap(section => section.sentences.map(sentence => sentence.english)), [page]);
   const [showChinese, setShowChinese] = useState(false);
   const [focusId, setFocusId] = useState<string | null>(null);
   const [practiceIndex, setPracticeIndex] = useState(0);
@@ -41,6 +42,7 @@ export function SchoolTextbookPage({ page, onRecordCheck, onComplete, onLaterRev
   };
   const toggleChinese = () => setShowChinese(value => !value);
   const showFocus = (id: string) => setFocusId(current => current === id ? null : id);
+  useEffect(() => { speech.preload(pageEnglish); }, [pageEnglish, speech.preload]);
   const submitCheck = () => {
     const correct = normalize(answer) === normalize(check.answer);
     onRecordCheck(page, check, correct);
