@@ -55,9 +55,9 @@ export function SchoolTextbookPage({ page, onRecordCheck, onComplete, onLaterRev
     }
   };
   const allChecksDone = checksDone.length === page.checks.length;
-  const pageFinish = page.printedPage === 4
+  const pageFinish = page.finishItems ?? (page.printedPage === 4
     ? ['问一问家人的职业。', '回答 She’s a doctor. / He’s a PE teacher.', '认识 family、job、doctor 和 teacher。']
-    : ['用 Can ... help? 问一问谁能帮忙。', '说出 I can clean my room.', '认识 clean、room、chore 和 sweep the floor。'];
+    : ['用 Can ... help? 问一问谁能帮忙。', '说出 I can clean my room.', '认识 clean、room、chore 和 sweep the floor。']);
   const advanceChallenge = () => {
     if (practiceIndex >= page.practicePrompts.length - 1) { setChallengeFinished(true); return; }
     setPracticeIndex(index => index + 1);

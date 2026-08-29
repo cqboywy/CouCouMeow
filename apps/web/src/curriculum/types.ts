@@ -55,6 +55,7 @@ export type TextbookPage = {
   focusItems: TextbookFocusItem[];
   practicePrompts: TextbookPagePracticePrompt[];
   checks: TextbookPageCheck[];
+  finishItems?: string[];
 };
 
 export type SchoolExercise = {

@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest';
 import { getNextTextbookPage, getTextbookPageById, getUnitTextbookPages } from './pepGrade4UpperTextbookPages';
 
 describe('PEP 四年级上册逐页教材内容', () => {
-  it('按印刷页码排列 Unit 1，并从第 3 页进入第 4 页', () => {
-    expect(getUnitTextbookPages('pep4a-u1').map(page => page.printedPage)).toEqual([3, 4]);
+  it('按印刷页码提供 Unit 1 的完整第 2–13 页', () => {
+    expect(getUnitTextbookPages('pep4a-u1').map(page => page.printedPage)).toEqual([2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
     expect(getNextTextbookPage('pep4a-u1-p3')?.id).toBe('pep4a-u1-p4');
+    expect(getNextTextbookPage('pep4a-u1-p13')).toBeUndefined();
   });
 
   it('保留第 3 页原句和可追溯的重点来源', () => {

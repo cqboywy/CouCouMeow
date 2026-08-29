@@ -1,4 +1,5 @@
 import type { TextbookPage } from './types';
+import { pepGrade4UpperUnit1RemainingPages } from './pepGrade4UpperUnit1RemainingPages';
 
 const page3: TextbookPage = {
   id: 'pep4a-u1-p3', textbookId: 'pep-grade4-upper', unitId: 'pep4a-u1', printedPage: 3,
@@ -75,7 +76,7 @@ const page4: TextbookPage = {
   ],
 };
 
-const pages = [page3, page4];
+const pages = [...pepGrade4UpperUnit1RemainingPages, page3, page4].sort((a, b) => a.printedPage - b.printedPage);
 
 export const getTextbookPageById = (pageId: string) => pages.find(page => page.id === pageId);
 export const getUnitTextbookPages = (unitId: string) => pages.filter(page => page.unitId === unitId).sort((a, b) => a.printedPage - b.printedPage);
