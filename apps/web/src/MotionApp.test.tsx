@@ -54,7 +54,7 @@ describe('motion interface', () => {
     render(<App />);
 
     fireEvent.click(await screen.findByRole('button', { name: '校内同步' }));
-    expect(screen.getByText('课本第 3 页 · 在家帮忙')).toBeInTheDocument();
+    expect(screen.getByText('继续学习 · 课本第 3 页')).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /开始学习/ })).toHaveLength(1);
     expect(screen.queryByText('三步完成今天的校内任务')).not.toBeInTheDocument();
 
