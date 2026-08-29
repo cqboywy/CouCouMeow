@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { App } from './App';
+import { App, applyLocalEpisodeStatus, selectVisibleProgress } from './App';
+import type { GrowthSummary } from './progress/localProgressRepository';
 
 const episode = {
   id: 'l1-001-dino-buddies-the-park',
@@ -19,6 +20,18 @@ afterEach(() => {
 });
 
 describe('motion interface', () => {
+  it('keeps real local growth data visible unless demo mode is explicitly requested', () => {
+    const actual = { today: { day: '2026-08-29', practiceCount: 1, newWords: [], newSentences: [], newPatterns: [], newEpisodes: [] }, days: [], items: { words: [], sentences: [], patterns: [], episodes: [] }, reviewItems: [] } satisfies GrowthSummary;
+
+    expect(selectVisibleProgress(new URLSearchParams('ui=motion'), actual)).toBe(actual);
+  });
+
+  it('marks completed extracurricular episodes in the bookshelf from local growth data', () => {
+    const summary = { today: { day: '2026-08-29', practiceCount: 0, newWords: [], newSentences: [], newPatterns: [], newEpisodes: [] }, days: [], items: { words: [], sentences: [], patterns: [], episodes: [{ id: episode.id, kind: 'episode', english: episode.title, chinese: '', episodeId: episode.id, firstLearnedDay: '2026-08-29', latestPracticeDay: '2026-08-29', correctCount: 1, totalPracticeCount: 1 }] }, reviewItems: [] } satisfies GrowthSummary;
+
+    expect(applyLocalEpisodeStatus([episode], summary)[0]?.is_learned).toBe(true);
+  });
+
   it('opens a simple school-first stage from the ui query', async () => {
     window.history.replaceState(null, '', '/?ui=motion');
     vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
