@@ -60,10 +60,20 @@ describe('school progress repository', () => {
 
     expect(repo.getSummary()).toMatchObject({
       completedPageIds: ['pep4a-u1-p3'],
-      currentPageId: 'pep4a-u1-p4',
+      currentPageId: 'pep4a-u1-p2',
       laterReviewItems: [expect.objectContaining({ id: schoolWord.id, pageId: 'pep4a-u1-p3', source: 'school' })],
     });
     expect(memory.getItem(PROGRESS_STORAGE_KEY)).toBeNull();
+  });
+
+  it('records Unit 2 page study under Unit 2 rather than Unit 1', () => {
+    const repo = createSchoolProgressRepository(memory, () => new Date('2026-08-27T09:00:00'));
+
+    repo.completePage('pep4a-u2-p14', [schoolWord]);
+
+    expect(repo.getSummary().masteredItems).toEqual([
+      expect.objectContaining({ lessonId: 'pep4a-u2-l1' }),
+    ]);
   });
 
   it('recovers from damaged school progress data', () => {

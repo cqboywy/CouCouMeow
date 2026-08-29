@@ -1,5 +1,5 @@
-import { getLessonById, pepGrade4Upper } from '../curriculum/pepGrade4UpperUnit1';
-import { getUnitTextbookPages } from '../curriculum/pepGrade4UpperTextbookPages';
+import { getLessonById, getUnitById, pepGrade4Upper } from '../curriculum/pepGrade4UpperUnit1';
+import { getTextbookPageById, getUnitTextbookPages } from '../curriculum/pepGrade4UpperTextbookPages';
 import type { SchoolLearningItem } from '../curriculum/types';
 
 export const SCHOOL_PROGRESS_STORAGE_KEY = 'coucoumeow.school-progress.v1';
@@ -73,6 +73,10 @@ export type SchoolExerciseResult = {
 
 const orderedLessonIds = pepGrade4Upper.units.flatMap(unit => unit.lessons).map(lesson => lesson.id);
 const orderedPageIds = pepGrade4Upper.units.flatMap(unit => getUnitTextbookPages(unit.id)).map(page => page.id);
+const lessonIdForPage = (pageId: string) => {
+  const unitId = getTextbookPageById(pageId)?.unitId;
+  return unitId ? getUnitById(unitId)?.lessons[0]?.id ?? '' : '';
+};
 const localDay = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 
 export function createSchoolProgressRepository(storage: Storage, now: () => Date) {
@@ -115,16 +119,16 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
   };
   const completePage = (pageId: string, masteredItems: SchoolLearningItem[]) => {
     const alreadyCompleted = read().events.some(event => event.type === 'page_completed' && event.pageId === pageId);
-    if (!alreadyCompleted) append({ type: 'page_completed', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, masteredItems });
+    if (!alreadyCompleted) append({ type: 'page_completed', lessonId: lessonIdForPage(pageId), pageId, masteredItems });
   };
   const addLaterReview = (pageId: string, item: SchoolLearningItem) => {
-    append({ type: 'later_review_added', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, item });
+    append({ type: 'later_review_added', lessonId: lessonIdForPage(pageId), pageId, item });
   };
   const recordPageCheck = (pageId: string, checkId: string, item: SchoolLearningItem | undefined, correct: boolean) => {
-    append({ type: 'page_check', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, exerciseId: checkId, item, correct });
+    append({ type: 'page_check', lessonId: lessonIdForPage(pageId), pageId, exerciseId: checkId, item, correct });
   };
   const resolveLaterReview = (pageId: string, itemId: string) => {
-    append({ type: 'later_review_resolved', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, item: { id: itemId, kind: 'word', english: '', chinese: '' } });
+    append({ type: 'later_review_resolved', lessonId: lessonIdForPage(pageId), pageId, item: { id: itemId, kind: 'word', english: '', chinese: '' } });
   };
   const selectTextbook = (textbookId: string) => {
     const record = read();

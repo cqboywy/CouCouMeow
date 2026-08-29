@@ -17,6 +17,7 @@ type Props = {
 const normalize = (value: string) => value.trim().toLocaleLowerCase().replace(/[.!?'’]/g, '');
 
 export function SchoolTextbookPage({ page, onRecordCheck, onComplete, onLaterReview, onBack, onOpenNext }: Props) {
+  const unitNumber = page.unitId.match(/-u(\d+)$/)?.[1] ?? '1';
   const speech = useEnglishSpeech();
   const pageEnglish = useMemo(() => page.sections.flatMap(section => section.sentences.map(sentence => sentence.english)), [page]);
   const [showChinese, setShowChinese] = useState(false);
@@ -65,9 +66,9 @@ export function SchoolTextbookPage({ page, onRecordCheck, onComplete, onLaterRev
   };
 
   return <main className="school-page textbook-page" aria-labelledby="textbook-page-title">
-    <button className="back-link" type="button" onClick={onBack}><ChevronLeft size={20} /> 回到 Unit 1</button>
+    <button className="back-link" type="button" onClick={onBack}><ChevronLeft size={20} /> 回到 Unit {unitNumber}</button>
     <header className="textbook-page__header">
-      <p className="eyebrow">PEP 四年级上册 · Unit 1 · 课本第 {page.printedPage} 页</p>
+      <p className="eyebrow">PEP 四年级上册 · Unit {unitNumber} · 课本第 {page.printedPage} 页</p>
       <h2 id="textbook-page-title">{page.chineseTitle}</h2>
       <p lang="en">{page.title}</p>
     </header>

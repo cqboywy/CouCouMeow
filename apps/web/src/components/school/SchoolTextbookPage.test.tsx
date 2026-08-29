@@ -35,4 +35,12 @@ describe('SchoolTextbookPage', () => {
     fireEvent.click(screen.getByRole('button', { name: '开始开口挑战' }));
     expect(screen.getByText('开口挑战 · 看中文，说英文 · 第 1/3 题')).toBeInTheDocument();
   });
+
+  it('根据当前教材页显示 Unit 2 的返回入口和页眉', () => {
+    const unit2Page = getTextbookPageById('pep4a-u2-p15')!;
+    render(<SchoolTextbookPage page={unit2Page} {...props} />);
+
+    expect(screen.getByRole('button', { name: '回到 Unit 2' })).toBeInTheDocument();
+    expect(screen.getByText('PEP 四年级上册 · Unit 2 · 课本第 15 页')).toBeInTheDocument();
+  });
 });

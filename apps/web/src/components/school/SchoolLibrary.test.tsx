@@ -15,13 +15,14 @@ describe('SchoolLibrary', () => {
     expect(onOpenPage).toHaveBeenCalledWith(expect.objectContaining({ id: 'pep4a-u1-p3' }));
   });
 
-  it('shows an honest preparing state for a unit without curated pages', () => {
-    render(<SchoolLibrary completedPageIds={[]} currentPageId="pep4a-u1-p3" laterReviewItems={[]} onOpenPage={vi.fn()} />);
+  it('opens Unit 2 from its first real textbook page', () => {
+    const onOpenPage = vi.fn();
+    render(<SchoolLibrary completedPageIds={[]} currentPageId="pep4a-u1-p3" laterReviewItems={[]} onOpenPage={onOpenPage} />);
 
     fireEvent.click(screen.getByRole('button', { name: /Unit 2 · My friends/ }));
 
-    expect(screen.getByText('这个单元正在整理')).toBeInTheDocument();
-    expect(screen.getByText('会按课本第 14–25 页逐页加入，不显示空练习。')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: /开始学习/ })).not.toBeInTheDocument();
+    expect(screen.getByText('继续学习 · 课本第 14 页')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /开始学习/ }));
+    expect(onOpenPage).toHaveBeenCalledWith(expect.objectContaining({ id: 'pep4a-u2-p14' }));
   });
 });
