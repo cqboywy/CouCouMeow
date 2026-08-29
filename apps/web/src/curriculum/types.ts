@@ -8,6 +8,55 @@ export type SchoolLearningItem = {
   phonetic?: string;
 };
 
+export type TextbookFocusSource = 'body' | 'appendix-word' | 'appendix-vocabulary' | 'appendix-expression';
+
+export type TextbookFocusItem = SchoolLearningItem & {
+  source: TextbookFocusSource;
+  note: string;
+};
+
+export type TextbookSentence = {
+  id: string;
+  english: string;
+  chinese: string;
+  focusItemIds?: string[];
+};
+
+export type TextbookPageSection = {
+  id: string;
+  label: string;
+  chineseLabel: string;
+  sentences: TextbookSentence[];
+};
+
+export type TextbookPagePracticePrompt = {
+  id: string;
+  chinesePrompt: string;
+  answer: string;
+  relatedSentenceId: string;
+};
+
+export type TextbookPageCheck = {
+  id: string;
+  prompt: string;
+  answer: string;
+  hint: string;
+  item?: SchoolLearningItem;
+};
+
+export type TextbookPage = {
+  id: string;
+  textbookId: string;
+  unitId: string;
+  printedPage: number;
+  title: string;
+  chineseTitle: string;
+  sections: TextbookPageSection[];
+  focusItems: TextbookFocusItem[];
+  practicePrompts: TextbookPagePracticePrompt[];
+  checks: TextbookPageCheck[];
+};
+
 export type SchoolExercise = {
   id: string;
   stage: 'practice' | 'check';
