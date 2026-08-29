@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { getLessonById } from '../curriculum/pepGrade4UpperUnit1';
-import type { CurriculumLesson, SchoolExercise } from '../curriculum/types';
+import type { CurriculumLesson, SchoolExercise, TextbookPage, TextbookFocusItem, TextbookPageCheck } from '../curriculum/types';
 import { createSchoolProgressRepository } from '../progress/schoolProgressRepository';
 
 type Options = { storage?: Storage };
@@ -32,6 +32,10 @@ export function useSchoolProgress({ storage = window.localStorage }: Options = {
       const items = [...lesson.vocabulary, ...lesson.sentences, ...lesson.phonics];
       repository.current.completeLesson(lesson.id, [...new Map(items.map(item => [item.id, item])).values()]);
     }),
+    completePage: (page: TextbookPage) => update(() => repository.current.completePage(page.id, page.focusItems)),
+    recordPageCheck: (page: TextbookPage, check: TextbookPageCheck, correct: boolean) => update(() => repository.current.recordPageCheck(page.id, check.id, check.item, correct)),
+    addLaterReview: (page: TextbookPage, item: TextbookFocusItem) => update(() => repository.current.addLaterReview(page.id, item)),
+    resolveLaterReview: (page: TextbookPage, itemId: string) => update(() => repository.current.resolveLaterReview(page.id, itemId)),
     selectTextbook: (textbookId: string) => update(() => repository.current.selectTextbook(textbookId)),
   };
 }

@@ -52,6 +52,20 @@ describe('school progress repository', () => {
     ]);
   });
 
+  it('stores page completion and later review without touching animation progress', () => {
+    const repo = createSchoolProgressRepository(memory, () => new Date('2026-08-27T09:00:00'));
+
+    repo.addLaterReview('pep4a-u1-p3', schoolWord);
+    repo.completePage('pep4a-u1-p3', [schoolWord]);
+
+    expect(repo.getSummary()).toMatchObject({
+      completedPageIds: ['pep4a-u1-p3'],
+      currentPageId: 'pep4a-u1-p4',
+      laterReviewItems: [expect.objectContaining({ id: schoolWord.id, pageId: 'pep4a-u1-p3', source: 'school' })],
+    });
+    expect(memory.getItem(PROGRESS_STORAGE_KEY)).toBeNull();
+  });
+
   it('recovers from damaged school progress data', () => {
     memory.setItem(SCHOOL_PROGRESS_STORAGE_KEY, '{bad-json');
 

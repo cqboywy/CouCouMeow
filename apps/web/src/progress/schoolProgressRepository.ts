@@ -1,4 +1,5 @@
 import { getLessonById, pepGrade4Upper } from '../curriculum/pepGrade4UpperUnit1';
+import { getUnitTextbookPages } from '../curriculum/pepGrade4UpperTextbookPages';
 import type { SchoolLearningItem } from '../curriculum/types';
 
 export const SCHOOL_PROGRESS_STORAGE_KEY = 'coucoumeow.school-progress.v1';
@@ -8,10 +9,11 @@ type SchoolEvent = {
   id: string;
   occurredAt: string;
   day: string;
-  type: 'exercise' | 'lesson_completed';
+  type: 'exercise' | 'lesson_completed' | 'page_completed' | 'page_check' | 'later_review_added' | 'later_review_resolved';
   textbookId: string;
   unitId: string;
   lessonId: string;
+  pageId?: string;
   exerciseId?: string;
   correct?: boolean;
   item?: SchoolLearningItem;
@@ -37,6 +39,11 @@ export type SchoolReviewItem = SchoolLearningItem & {
   exerciseId: string;
 };
 
+export type SchoolLaterReviewItem = SchoolLearningItem & {
+  source: 'school';
+  pageId: string;
+};
+
 export type SchoolDailySummary = {
   day: string;
   practiceCount: number;
@@ -48,9 +55,12 @@ export type SchoolProgressSummary = {
   unitId: string;
   completedLessonIds: string[];
   currentLessonId: string;
+  completedPageIds: string[];
+  currentPageId: string;
   practiceCount: number;
   masteredItems: SchoolMasteryItem[];
   reviewItems: SchoolReviewItem[];
+  laterReviewItems: SchoolLaterReviewItem[];
   days: SchoolDailySummary[];
 };
 
@@ -62,6 +72,7 @@ export type SchoolExerciseResult = {
 };
 
 const orderedLessonIds = pepGrade4Upper.units.flatMap(unit => unit.lessons).map(lesson => lesson.id);
+const orderedPageIds = pepGrade4Upper.units.flatMap(unit => getUnitTextbookPages(unit.id)).map(page => page.id);
 const localDay = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
 
 export function createSchoolProgressRepository(storage: Storage, now: () => Date) {
@@ -102,6 +113,19 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
     const alreadyCompleted = read().events.some(event => event.type === 'lesson_completed' && event.lessonId === lessonId);
     if (!alreadyCompleted) append({ type: 'lesson_completed', lessonId, masteredItems });
   };
+  const completePage = (pageId: string, masteredItems: SchoolLearningItem[]) => {
+    const alreadyCompleted = read().events.some(event => event.type === 'page_completed' && event.pageId === pageId);
+    if (!alreadyCompleted) append({ type: 'page_completed', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, masteredItems });
+  };
+  const addLaterReview = (pageId: string, item: SchoolLearningItem) => {
+    append({ type: 'later_review_added', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, item });
+  };
+  const recordPageCheck = (pageId: string, checkId: string, item: SchoolLearningItem | undefined, correct: boolean) => {
+    append({ type: 'page_check', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, exerciseId: checkId, item, correct });
+  };
+  const resolveLaterReview = (pageId: string, itemId: string) => {
+    append({ type: 'later_review_resolved', lessonId: getLessonById('pep4a-u1-l1')?.id ?? '', pageId, item: { id: itemId, kind: 'word', english: '', chinese: '' } });
+  };
   const selectTextbook = (textbookId: string) => {
     const record = read();
     record.selectedTextbookId = textbookId;
@@ -110,9 +134,10 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
   const getSummary = (): SchoolProgressSummary => {
     const record = read();
     const completedLessonIds = [...new Set(record.events.filter(event => event.type === 'lesson_completed').map(event => event.lessonId))];
+    const completedPageIds = [...new Set(record.events.filter(event => event.type === 'page_completed' && event.pageId).map(event => event.pageId!))];
     const mastered = new Map<string, SchoolMasteryItem>();
     for (const event of record.events) {
-      if (event.type === 'lesson_completed') {
+      if (event.type === 'lesson_completed' || event.type === 'page_completed') {
         for (const item of event.masteredItems ?? []) {
           if (!mastered.has(item.id)) mastered.set(item.id, { ...item, source: 'school', lessonId: event.lessonId, firstLearnedDay: event.day, latestPracticeDay: event.day });
         }
@@ -132,21 +157,32 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
     const dailyMap = new Map<string, SchoolDailySummary>();
     for (const event of record.events) {
       const daily = dailyMap.get(event.day) ?? { day: event.day, practiceCount: 0, completedLessonCount: 0 };
-      if (event.type === 'exercise') daily.practiceCount += 1;
+      if (event.type === 'exercise' || event.type === 'page_check') daily.practiceCount += 1;
       if (event.type === 'lesson_completed') daily.completedLessonCount += 1;
       dailyMap.set(event.day, daily);
     }
     const currentLessonId = orderedLessonIds.find(id => !completedLessonIds.includes(id)) ?? orderedLessonIds.at(-1)!;
+    const currentPageId = orderedPageIds.find(id => !completedPageIds.includes(id)) ?? orderedPageIds.at(-1) ?? '';
+    const laterReview = new Map<string, SchoolLaterReviewItem>();
+    for (const event of record.events) {
+      if (!event.pageId || !event.item) continue;
+      const key = `${event.pageId}:${event.item.id}`;
+      if (event.type === 'later_review_added') laterReview.set(key, { ...event.item, source: 'school', pageId: event.pageId });
+      if (event.type === 'later_review_resolved') laterReview.delete(key);
+    }
     return {
       textbookId: record.selectedTextbookId,
       unitId: getLessonById(currentLessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
       completedLessonIds,
       currentLessonId,
-      practiceCount: record.events.filter(event => event.type === 'exercise').length,
+      completedPageIds,
+      currentPageId,
+      practiceCount: record.events.filter(event => event.type === 'exercise' || event.type === 'page_check').length,
       masteredItems: [...mastered.values()],
       reviewItems,
+      laterReviewItems: [...laterReview.values()],
       days: [...dailyMap.values()].sort((a, b) => b.day.localeCompare(a.day)).slice(0, 7),
     };
   };
-  return { getSummary, recordExercise, completeLesson, selectTextbook };
+  return { getSummary, recordExercise, completeLesson, completePage, recordPageCheck, addLaterReview, resolveLaterReview, selectTextbook };
 }
