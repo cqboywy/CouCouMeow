@@ -3,13 +3,14 @@ import { describe, expect, it, vi } from 'vitest';
 import { SchoolLibrary } from './SchoolLibrary';
 
 describe('SchoolLibrary', () => {
-  it('lets a child choose Unit 2 without hiding the Unit 1 learning history', () => {
-    render(<SchoolLibrary completedLessonIds={['pep4a-u1-l1']} currentLessonId="pep4a-u1-l2" onOpenLesson={vi.fn()} />);
+  it('opens the current real textbook page instead of an empty lesson route', () => {
+    const onOpenPage = vi.fn();
+    render(<SchoolLibrary completedPageIds={[]} currentPageId="pep4a-u1-p3" laterReviewCount={2} onOpenPage={onOpenPage} />);
 
-    expect(screen.getByRole('heading', { name: 'Unit 1 Helping at home' })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('tab', { name: 'Unit 2 My friends' }));
+    expect(screen.getByText('课本第 3 页 · 在家帮忙')).toBeInTheDocument();
+    expect(screen.queryByText('三步完成今天的校内任务')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /开始学习/ }));
 
-    expect(screen.getByRole('heading', { name: 'Unit 2 My friends' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /开始第 1 课：认识 My friends/ })).toBeInTheDocument();
+    expect(onOpenPage).toHaveBeenCalledWith(expect.objectContaining({ id: 'pep4a-u1-p3' }));
   });
 });

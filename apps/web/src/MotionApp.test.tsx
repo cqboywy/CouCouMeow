@@ -54,8 +54,16 @@ describe('motion interface', () => {
     render(<App />);
 
     fireEvent.click(await screen.findByRole('button', { name: '校内同步' }));
-    expect(screen.getByRole('heading', { name: 'Unit 1 Helping at home' })).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: /开始第/ })).toHaveLength(6);
+    expect(screen.getByText('课本第 3 页 · 在家帮忙')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: /开始学习/ })).toHaveLength(1);
+    expect(screen.queryByText('三步完成今天的校内任务')).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /开始学习/ }));
+    expect(screen.getByRole('heading', { name: '在家帮忙' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '本页重点' })).toBeInTheDocument();
+    expect(screen.getByText('开口挑战 · 看中文，说英文 · 第 1/3 题')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: '回到 Unit 1' }));
 
     fireEvent.click(screen.getByRole('button', { name: '课外动画' }));
     expect(screen.getByRole('heading', { name: '动画学习小书架' })).toBeInTheDocument();

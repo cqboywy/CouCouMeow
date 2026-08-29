@@ -54,7 +54,7 @@ export function useEnglishSpeech() {
       if (attempt.current === currentAttempt) setState({ phase: 'idle', message: '朗读完成。', activeText: null, activeKey: null });
     };
     utterance.onerror = event => {
-      if (attempt.current !== currentAttempt || event.error === 'canceled') return;
+      if (attempt.current !== currentAttempt || event.error === 'canceled' || event.error === 'interrupted') return;
       clearTimers();
       setState({ phase: 'error', message: loadingMessage, activeText: text, activeKey: key });
     };

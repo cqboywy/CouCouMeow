@@ -6,6 +6,7 @@ import { DualTrackGrowth } from './DualTrackGrowth';
 
 const school: SchoolProgressSummary = {
   textbookId: 'pep-grade4-upper', unitId: 'pep4a-u1', completedLessonIds: ['pep4a-u1-l1'], currentLessonId: 'pep4a-u1-l2', practiceCount: 3,
+  completedPageIds: [], currentPageId: 'pep4a-u1-p3', laterReviewItems: [],
   masteredItems: [{ id: 'school-help', kind: 'word', english: 'help', chinese: '帮助', source: 'school', lessonId: 'pep4a-u1-l1', firstLearnedDay: '2026-08-27', latestPracticeDay: '2026-08-27' }],
   reviewItems: [], days: [{ day: '2026-08-27', practiceCount: 3, completedLessonCount: 1 }],
 };
