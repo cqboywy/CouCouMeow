@@ -1,0 +1,186 @@
+{
+  "kind": "extra_episode",
+  "schema_version": 1,
+  "content_version": 1,
+  "content_hash": "d27834319d54dc84961d52f2e6b5a6fbb6efe703c1ac7a60ab502bfde02eb17c",
+  "episode": {
+    "content_key": "l1-bat-and-friends-001-hunting-for-bugs",
+    "level": 1,
+    "series_title": "Bat and Friends",
+    "episode_number": 1,
+    "title": "Hunting for Bugs",
+    "chinese_title": "蝙蝠和朋友们：寻找小虫子",
+    "local_video_filename": "001_Bat and Friends 1_Hunting for Bugs.mp4",
+    "local_srt_filename": null,
+    "media_provider": "local",
+    "media_locator": null,
+    "story_summary": "Bat 醒来后飞出山洞找虫子当晚餐。他飞过房子和树，吃饱后却发现天黑、起风又下雨，自己已经离家很远。",
+    "story_theme": "开心探索时也要留意时间和天气。遇到变化不慌张，下一集再和 Bat 一起找安全的回家路。",
+    "comprehension_questions": [
+      "Bat 从哪里飞出来？",
+      "故事结尾的天气怎么样？"
+    ],
+    "retell_steps": [
+      "Bat 醒来，飞出山洞。",
+      "他想找虫子吃。",
+      "天黑、起风又下雨，Bat 发现自己离家很远。"
+    ],
+    "past_tense_pairs": [
+      {
+        "base": "wake",
+        "past": "woke",
+        "meaning": "醒来"
+      },
+      {
+        "base": "fly",
+        "past": "flew",
+        "meaning": "飞"
+      },
+      {
+        "base": "find",
+        "past": "found",
+        "meaning": "找到"
+      }
+    ]
+  },
+  "sentences": [
+    {
+      "content_key": "bat-1-sentence-1",
+      "sequence_no": 1,
+      "english_text": "Bat woke up.",
+      "chinese_translation": "Bat 醒来了。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-1-sentence-2",
+      "sequence_no": 2,
+      "english_text": "He flew out of his cave.",
+      "chinese_translation": "他飞出了自己的山洞。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-1-sentence-5",
+      "sequence_no": 3,
+      "english_text": "And I will eat them!",
+      "chinese_translation": "然后我会吃掉它们！",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-1-sentence-9",
+      "sequence_no": 4,
+      "english_text": "He found some big bugs.",
+      "chinese_translation": "他找到了一些大虫子。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-1-sentence-11",
+      "sequence_no": 5,
+      "english_text": "He ate and ate and ate.",
+      "chinese_translation": "他吃呀吃呀吃。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-1-sentence-15",
+      "sequence_no": 6,
+      "english_text": "But now it was very dark.",
+      "chinese_translation": "可是现在天已经很黑了。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-1-sentence-16",
+      "sequence_no": 7,
+      "english_text": "Where is home?",
+      "chinese_translation": "家在哪里呢？",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-1-sentence-19",
+      "sequence_no": 8,
+      "english_text": "Bat was far from home.",
+      "chinese_translation": "Bat 离家很远。",
+      "is_featured": true
+    }
+  ],
+  "vocab": [
+    {
+      "content_key": "bat-1-vocab-bat",
+      "sequence_no": 1,
+      "word": "bat",
+      "phonetic": "/bæt/",
+      "chinese_meaning": "蝙蝠"
+    },
+    {
+      "content_key": "bat-1-vocab-wake-up",
+      "sequence_no": 2,
+      "word": "wake up",
+      "phonetic": "/weɪk ʌp/",
+      "chinese_meaning": "醒来"
+    },
+    {
+      "content_key": "bat-1-vocab-fly",
+      "sequence_no": 3,
+      "word": "fly",
+      "phonetic": "/flaɪ/",
+      "chinese_meaning": "飞"
+    },
+    {
+      "content_key": "bat-1-vocab-cave",
+      "sequence_no": 4,
+      "word": "cave",
+      "phonetic": "/keɪv/",
+      "chinese_meaning": "山洞"
+    },
+    {
+      "content_key": "bat-1-vocab-bug",
+      "sequence_no": 5,
+      "word": "bug",
+      "phonetic": "/bʌɡ/",
+      "chinese_meaning": "小虫子"
+    },
+    {
+      "content_key": "bat-1-vocab-dark",
+      "sequence_no": 6,
+      "word": "dark",
+      "phonetic": "/dɑːk/",
+      "chinese_meaning": "黑暗的"
+    },
+    {
+      "content_key": "bat-1-vocab-rain",
+      "sequence_no": 7,
+      "word": "rain",
+      "phonetic": "/reɪn/",
+      "chinese_meaning": "雨"
+    },
+    {
+      "content_key": "bat-1-vocab-home",
+      "sequence_no": 8,
+      "word": "home",
+      "phonetic": "/həʊm/",
+      "chinese_meaning": "家"
+    }
+  ],
+  "knowledge": [
+    {
+      "content_key": "bat-1-knowledge-1",
+      "sequence_no": 1,
+      "title": "主语 + will + 动词原形",
+      "grammar_explanation": "will 表示“将会做”。Bat 在说自己的计划。",
+      "core_knowledge": "will 表示“将会做”。Bat 在说自己的计划。",
+      "examples": [
+        "I will find my book.",
+        "She will help her friend."
+      ]
+    },
+    {
+      "content_key": "bat-1-knowledge-2",
+      "sequence_no": 2,
+      "title": "be far from + 地点",
+      "grammar_explanation": "far from 表示“离……很远”。",
+      "core_knowledge": "far from 表示“离……很远”。",
+      "examples": [
+        "My school is far from home.",
+        "Bat was far from home."
+      ]
+    }
+  ]
+}

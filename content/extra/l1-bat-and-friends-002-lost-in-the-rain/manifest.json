@@ -1,0 +1,186 @@
+{
+  "kind": "extra_episode",
+  "schema_version": 1,
+  "content_version": 1,
+  "content_hash": "780f25fe9610bc2f88451cfce887257b60112fbb5e3cb5c648937809219ece4e",
+  "episode": {
+    "content_key": "l1-bat-and-friends-002-lost-in-the-rain",
+    "level": 1,
+    "series_title": "Bat and Friends",
+    "episode_number": 2,
+    "title": "Lost in the Rain",
+    "chinese_title": "蝙蝠和朋友们：雨中迷路",
+    "local_video_filename": "002_Bat and Friends 2_Lost in the Rain.mp4",
+    "local_srt_filename": null,
+    "media_provider": "local",
+    "media_locator": null,
+    "story_summary": "Bat 在雨中又湿又迷路，想找一个干燥又安全的地方。他四处寻找，最后发现一座大大的红谷仓和一个可以进去的小洞。",
+    "story_theme": "迷路时先说清自己的需要，再认真观察周围。一步一步找线索，就能靠近安全的地方。",
+    "comprehension_questions": [
+      "Bat 想找哪两种地方？",
+      "Bat 最后看见了什么？"
+    ],
+    "retell_steps": [
+      "Bat 在雨中淋湿，也迷路了。",
+      "他想找干燥又安全的地方。",
+      "Bat 发现一座大大的红谷仓。"
+    ],
+    "past_tense_pairs": [
+      {
+        "base": "see",
+        "past": "saw",
+        "meaning": "看见"
+      },
+      {
+        "base": "fly",
+        "past": "flew",
+        "meaning": "飞"
+      },
+      {
+        "base": "go",
+        "past": "went",
+        "meaning": "去"
+      }
+    ]
+  },
+  "sentences": [
+    {
+      "content_key": "bat-2-sentence-1",
+      "sequence_no": 1,
+      "english_text": "I am wet.",
+      "chinese_translation": "我湿了。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-2-sentence-2",
+      "sequence_no": 2,
+      "english_text": "And I am lost.",
+      "chinese_translation": "而且我迷路了。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-2-sentence-3",
+      "sequence_no": 3,
+      "english_text": "I must find a dry place.",
+      "chinese_translation": "我必须找到一个干燥的地方。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-2-sentence-4",
+      "sequence_no": 4,
+      "english_text": "I must find a safe place.",
+      "chinese_translation": "我必须找到一个安全的地方。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-2-sentence-7",
+      "sequence_no": 5,
+      "english_text": "The wind was strong.",
+      "chinese_translation": "风很大。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-2-sentence-12",
+      "sequence_no": 6,
+      "english_text": "It was big and red.",
+      "chinese_translation": "它又大又红。",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-2-sentence-13",
+      "sequence_no": 7,
+      "english_text": "It was a barn!",
+      "chinese_translation": "那是一座谷仓！",
+      "is_featured": true
+    },
+    {
+      "content_key": "bat-2-sentence-20",
+      "sequence_no": 8,
+      "english_text": "But so was Bat.",
+      "chinese_translation": "但 Bat 也很小。",
+      "is_featured": true
+    }
+  ],
+  "vocab": [
+    {
+      "content_key": "bat-2-vocab-wet",
+      "sequence_no": 1,
+      "word": "wet",
+      "phonetic": "/wet/",
+      "chinese_meaning": "湿的"
+    },
+    {
+      "content_key": "bat-2-vocab-lost",
+      "sequence_no": 2,
+      "word": "lost",
+      "phonetic": "/lɒst/",
+      "chinese_meaning": "迷路的"
+    },
+    {
+      "content_key": "bat-2-vocab-must",
+      "sequence_no": 3,
+      "word": "must",
+      "phonetic": "/mʌst/",
+      "chinese_meaning": "必须"
+    },
+    {
+      "content_key": "bat-2-vocab-dry",
+      "sequence_no": 4,
+      "word": "dry",
+      "phonetic": "/draɪ/",
+      "chinese_meaning": "干燥的"
+    },
+    {
+      "content_key": "bat-2-vocab-safe",
+      "sequence_no": 5,
+      "word": "safe",
+      "phonetic": "/seɪf/",
+      "chinese_meaning": "安全的"
+    },
+    {
+      "content_key": "bat-2-vocab-barn",
+      "sequence_no": 6,
+      "word": "barn",
+      "phonetic": "/bɑːn/",
+      "chinese_meaning": "谷仓"
+    },
+    {
+      "content_key": "bat-2-vocab-roof",
+      "sequence_no": 7,
+      "word": "roof",
+      "phonetic": "/ruːf/",
+      "chinese_meaning": "屋顶"
+    },
+    {
+      "content_key": "bat-2-vocab-hole",
+      "sequence_no": 8,
+      "word": "hole",
+      "phonetic": "/həʊl/",
+      "chinese_meaning": "洞"
+    }
+  ],
+  "knowledge": [
+    {
+      "content_key": "bat-2-knowledge-1",
+      "sequence_no": 1,
+      "title": "I am + 状态",
+      "grammar_explanation": "用 I am 说出自己现在的状态或感受。",
+      "core_knowledge": "用 I am 说出自己现在的状态或感受。",
+      "examples": [
+        "I am happy.",
+        "I am lost."
+      ]
+    },
+    {
+      "content_key": "bat-2-knowledge-2",
+      "sequence_no": 2,
+      "title": "must + 动词原形",
+      "grammar_explanation": "must 表示“必须”，后面接动作。",
+      "core_knowledge": "must 表示“必须”，后面接动作。",
+      "examples": [
+        "I must go home.",
+        "I must find my bag."
+      ]
+    }
+  ]
+}

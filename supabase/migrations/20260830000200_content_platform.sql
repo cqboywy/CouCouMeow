@@ -57,7 +57,7 @@ create table public.school_pages (
   schema_version integer not null default 1 check (schema_version > 0),
   sections jsonb not null default '[]'::jsonb check (jsonb_typeof(sections) = 'array'),
   practice_prompts jsonb not null default '[]'::jsonb check (jsonb_typeof(practice_prompts) = 'array'),
-  finish_item_keys text[] not null default '{}',
+  finish_items text[] not null default '{}',
   unique (textbook_id, printed_page)
 );
 
@@ -330,7 +330,7 @@ begin
     where textbook_id = v_textbook_id and content_key = v_page ->> 'unit_key';
     insert into public.school_pages (
       textbook_id, unit_id, content_key, printed_page, title, chinese_title,
-      schema_version, sections, practice_prompts, finish_item_keys
+      schema_version, sections, practice_prompts, finish_items
     ) values (
       v_textbook_id, v_unit_id, v_page ->> 'content_key',
       (v_page ->> 'printed_page')::integer, v_page ->> 'title',
@@ -338,7 +338,7 @@ begin
       coalesce((v_page ->> 'schema_version')::integer, 1),
       coalesce(v_page -> 'sections', '[]'::jsonb),
       coalesce(v_page -> 'practice_prompts', '[]'::jsonb),
-      array(select value from jsonb_array_elements_text(coalesce(v_page -> 'finish_item_keys', '[]'::jsonb)))
+      array(select value from jsonb_array_elements_text(coalesce(v_page -> 'finish_items', '[]'::jsonb)))
     );
   end loop;
 
