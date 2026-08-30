@@ -183,6 +183,7 @@ version = "0.1.0"
 source = { editable = "tools/content_importer" }
 dependencies = [
     { name = "coucoumeow-api" },
+    { name = "httpx" },
     { name = "pydantic" },
     { name = "typer" },
 ]
@@ -190,6 +191,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "coucoumeow-api", editable = "apps/api" },
+    { name = "httpx", specifier = ">=0.28,<1" },
     { name = "pydantic", specifier = ">=2.12,<3" },
     { name = "typer" },
 ]
