@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { GrowthSummary } from '../../progress/localProgressRepository';
-import type { SchoolProgressSummary } from '../../progress/schoolProgressRepository';
+import type { GrowthSummary } from '../../progress/extraProgressSummary';
+import type { SchoolProgressSummary } from '../../progress/schoolProgressSummary';
 import { DualTrackGrowth } from './DualTrackGrowth';
 
 const school: SchoolProgressSummary = {
@@ -38,7 +38,7 @@ describe('DualTrackGrowth', () => {
 
     expect(screen.getByText('已学剧集')).toBeInTheDocument();
     expect(screen.queryByText('已完成页面')).not.toBeInTheDocument();
-  }, 15_000);
+  });
 
   it('lets school learning be viewed by vocabulary and sentences', () => {
     render(<DualTrackGrowth school={school} extra={extra} onStartSchool={vi.fn()} onStartExtra={vi.fn()} />);

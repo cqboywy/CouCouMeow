@@ -1,6 +1,6 @@
 import { BookOpen, CalendarDays } from 'lucide-react';
 import { useState } from 'react';
-import type { SchoolMasteryItem, SchoolProgressSummary } from '../../progress/schoolProgressRepository';
+import type { SchoolMasteryItem, SchoolProgressSummary } from '../../progress/schoolProgressSummary';
 import { getTextbookPageById } from '../../curriculum/pepGrade4UpperTextbookPages';
 import { getLessonById, getUnitById } from '../../curriculum/pepGrade4UpperUnit1';
 import { Button } from '../ui/Button';

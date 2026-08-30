@@ -11,14 +11,18 @@ import re
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[2]
 SUPABASE = ROOT / "supabase"
 MIGRATION = (SUPABASE / "migrations" / "20260826000100_initial_schema.sql").read_text()
 ATTEMPT_EVIDENCE_MIGRATION = SUPABASE / "migrations" / "20260827000200_add_attempt_answer_method.sql"
+ONLINE_PROGRESS_MIGRATION = SUPABASE / "migrations" / "20260830000100_online_learning_progress.sql"
+ONLINE_PROGRESS_TEST = SUPABASE / "tests" / "003_online_learning_progress.test.sql"
 SCHEMA_TEST = (SUPABASE / "tests" / "001_schema.test.sql").read_text()
 RLS_TEST = (SUPABASE / "tests" / "002_rls.test.sql").read_text()
 SEED_PATH = SUPABASE / "seed.sql"
+ROOT_ENV_EXAMPLE = ROOT / ".env.example"
+WEB_ENV_EXAMPLE = ROOT / "apps" / "web" / ".env.example"
+LEARNING_MIGRATION_GUIDE = ROOT / "docs" / "development" / "supabase-learning-migration.md"
 
 
 def normalized(sql: str) -> str:
@@ -117,6 +121,33 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assertIn("add column if not exists answer_method text", migration)
         self.assertIn("answer_method in ('written', 'spoken', 'sentence_reading')", migration)
 
+    def test_online_progress_schema_is_owner_scoped_and_append_only(self) -> None:
+        self.assertTrue(ONLINE_PROGRESS_MIGRATION.is_file())
+        self.assertTrue(ONLINE_PROGRESS_TEST.is_file())
+        migration = normalized(ONLINE_PROGRESS_MIGRATION.read_text())
+        rls_test = normalized(ONLINE_PROGRESS_TEST.read_text())
+
+        self.assertIn("create type public.learning_track as enum ('extra', 'school')", migration)
+        self.assertIn("create type public.learning_event_type as enum", migration)
+        for table in ("learning_events", "learner_preferences", "local_progress_imports"):
+            self.assertIn(f"create table public.{table}", migration)
+            self.assertIn(f"alter table public.{table} enable row level security", migration)
+        self.assertIn("check (jsonb_typeof(payload) = 'object')", migration)
+        self.assertIn("create index learning_events_user_occurred_idx", migration)
+        self.assertIn("grant select, insert, delete on table public.learning_events to authenticated", migration)
+        self.assertNotRegex(
+            migration,
+            r"grant\s+[^;]*update[^;]*public\.learning_events[^;]*authenticated",
+        )
+        for table in ("learning_events", "learner_preferences", "local_progress_imports"):
+            self.assertRegex(
+                migration,
+                rf"create policy [^;]+ on public\.{table}[^;]+auth\.uid\(\)",
+            )
+        self.assertIn("user a sees only its online learning event", rls_test)
+        self.assertIn("user a sees only its learner preference", rls_test)
+        self.assertIn("user a sees only its import receipt", rls_test)
+
     def test_replace_function_has_exactly_the_public_contract_signature(self) -> None:
         declaration = re.search(
             r"create or replace function public\.replace_episode_content\((.*?)\) "
@@ -208,6 +239,15 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assertIn("the sleepy cat", seed_normalized)
         self.assertNotIn("little fox", seed_normalized)
         self.assertNotRegex(seed, r"/(Users|home|var|tmp)/|[A-Za-z]:\\\\")
+
+    def test_online_learning_configuration_examples_do_not_contain_credentials(self) -> None:
+        for path in (ROOT_ENV_EXAMPLE, WEB_ENV_EXAMPLE):
+            content = path.read_text()
+            self.assertIn("VITE_SUPABASE_URL=", content)
+            self.assertIn("VITE_SUPABASE_ANON_KEY=", content)
+            self.assertNotRegex(content, r"https://[a-z0-9]{8,}\.supabase\.co")
+            self.assertNotRegex(content, r"eyJ[a-zA-Z0-9_-]{20,}")
+        self.assertTrue(LEARNING_MIGRATION_GUIDE.is_file())
 
 
 if __name__ == "__main__":
