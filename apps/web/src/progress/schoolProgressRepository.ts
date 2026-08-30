@@ -50,6 +50,7 @@ export type SchoolDailySummary = {
   day: string;
   practiceCount: number;
   completedLessonCount: number;
+  completedPageCount: number;
 };
 
 export type SchoolProgressSummary = {
@@ -162,9 +163,10 @@ export function createSchoolProgressRepository(storage: Storage, now: () => Date
       .map(event => ({ ...event.item!, source: 'school' as const, lessonId: event.lessonId, exerciseId: event.exerciseId!, pageId: event.pageId }));
     const dailyMap = new Map<string, SchoolDailySummary>();
     for (const event of record.events) {
-      const daily = dailyMap.get(event.day) ?? { day: event.day, practiceCount: 0, completedLessonCount: 0 };
+      const daily = dailyMap.get(event.day) ?? { day: event.day, practiceCount: 0, completedLessonCount: 0, completedPageCount: 0 };
       if (event.type === 'exercise' || event.type === 'page_check') daily.practiceCount += 1;
       if (event.type === 'lesson_completed') daily.completedLessonCount += 1;
+      if (event.type === 'page_completed') daily.completedPageCount += 1;
       dailyMap.set(event.day, daily);
     }
     const currentLessonId = orderedLessonIds.find(id => !completedLessonIds.includes(id)) ?? orderedLessonIds.at(-1)!;
