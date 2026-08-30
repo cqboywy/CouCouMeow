@@ -9,7 +9,7 @@ import { useSchoolProgress } from './useSchoolProgress';
 const createRepository = (): LearningProgressRepository => ({
   loadEvents: vi.fn(async () => []), appendEvents: vi.fn(async () => undefined),
   getSelectedTextbookId: vi.fn(async () => 'pep4a'), setSelectedTextbookId: vi.fn(async () => undefined),
-  getImportReceipt: vi.fn(async () => null), saveImportReceipt: vi.fn(async () => undefined), findEventIds: vi.fn(async () => new Set()),
+  getImportReceipt: vi.fn(async () => null), saveImportReceipt: vi.fn(async () => undefined), findEventIds: vi.fn(async (_ids: string[]) => new Set<string>()),
 });
 
 describe('useSchoolProgress', () => {

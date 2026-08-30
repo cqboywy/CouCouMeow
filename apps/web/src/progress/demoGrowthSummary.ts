@@ -1,4 +1,4 @@
-import type { DailySummary, GrowthSummary, MasteryItem } from './localProgressRepository';
+import type { DailySummary, GrowthSummary, MasteryItem } from './extraProgressSummary';
 
 const dayKey = (date: Date, daysAgo = 0) => {
   const copy = new Date(date);

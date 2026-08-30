@@ -1,7 +1,7 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App, applyLocalEpisodeStatus, getSchoolReviewDestination, selectVisibleProgress } from './App';
-import type { GrowthSummary } from './progress/localProgressRepository';
+import type { GrowthSummary } from './progress/extraProgressSummary';
 import { renderWithLearningData } from './test/renderWithLearningData';
 
 const episode = {

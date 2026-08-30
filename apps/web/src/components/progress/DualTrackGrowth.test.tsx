@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { GrowthSummary } from '../../progress/localProgressRepository';
-import type { SchoolProgressSummary } from '../../progress/schoolProgressRepository';
+import type { GrowthSummary } from '../../progress/extraProgressSummary';
+import type { SchoolProgressSummary } from '../../progress/schoolProgressSummary';
 import { DualTrackGrowth } from './DualTrackGrowth';
 
 const school: SchoolProgressSummary = {

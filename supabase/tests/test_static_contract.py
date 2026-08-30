@@ -11,7 +11,6 @@ import re
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[2]
 SUPABASE = ROOT / "supabase"
 MIGRATION = (SUPABASE / "migrations" / "20260826000100_initial_schema.sql").read_text()
@@ -21,6 +20,9 @@ ONLINE_PROGRESS_TEST = SUPABASE / "tests" / "003_online_learning_progress.test.s
 SCHEMA_TEST = (SUPABASE / "tests" / "001_schema.test.sql").read_text()
 RLS_TEST = (SUPABASE / "tests" / "002_rls.test.sql").read_text()
 SEED_PATH = SUPABASE / "seed.sql"
+ROOT_ENV_EXAMPLE = ROOT / ".env.example"
+WEB_ENV_EXAMPLE = ROOT / "apps" / "web" / ".env.example"
+LEARNING_MIGRATION_GUIDE = ROOT / "docs" / "development" / "supabase-learning-migration.md"
 
 
 def normalized(sql: str) -> str:
@@ -237,6 +239,15 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assertIn("the sleepy cat", seed_normalized)
         self.assertNotIn("little fox", seed_normalized)
         self.assertNotRegex(seed, r"/(Users|home|var|tmp)/|[A-Za-z]:\\\\")
+
+    def test_online_learning_configuration_examples_do_not_contain_credentials(self) -> None:
+        for path in (ROOT_ENV_EXAMPLE, WEB_ENV_EXAMPLE):
+            content = path.read_text()
+            self.assertIn("VITE_SUPABASE_URL=", content)
+            self.assertIn("VITE_SUPABASE_ANON_KEY=", content)
+            self.assertNotRegex(content, r"https://[a-z0-9]{8,}\.supabase\.co")
+            self.assertNotRegex(content, r"eyJ[a-zA-Z0-9_-]{20,}")
+        self.assertTrue(LEARNING_MIGRATION_GUIDE.is_file())
 
 
 if __name__ == "__main__":

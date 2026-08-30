@@ -12,12 +12,12 @@ const createRepository = () => {
   const receipts = new Map<LegacySourceKey, ImportReceipt>();
   const repository: LearningProgressRepository = {
     loadEvents: vi.fn(async () => [...events.values()]),
-    appendEvents: vi.fn(async batch => batch.forEach(event => events.set(event.id, event))),
+    appendEvents: vi.fn(async (batch: LearningEvent[]) => { batch.forEach(event => events.set(event.id, event)); }),
     getSelectedTextbookId: vi.fn(async () => null),
     setSelectedTextbookId: vi.fn(async () => undefined),
     getImportReceipt: vi.fn(async key => receipts.get(key) ?? null),
-    saveImportReceipt: vi.fn(async receipt => receipts.set(receipt.sourceKey, { ...receipt, importedAt: '2026-08-30T10:00:00Z' })),
-    findEventIds: vi.fn(async ids => new Set(ids.filter(id => events.has(id)))),
+    saveImportReceipt: vi.fn(async (receipt: Omit<ImportReceipt, 'importedAt'>) => { receipts.set(receipt.sourceKey, { ...receipt, importedAt: '2026-08-30T10:00:00Z' }); }),
+    findEventIds: vi.fn(async (ids: string[]) => new Set<string>(ids.filter(id => events.has(id)))),
   };
   return { repository, events, receipts };
 };

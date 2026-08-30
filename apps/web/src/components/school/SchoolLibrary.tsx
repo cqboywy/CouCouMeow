@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { getUnitTextbookPages } from '../../curriculum/pepGrade4UpperTextbookPages';
 import { pepGrade4UpperTextbookUnits } from '../../curriculum/pepGrade4UpperTextbookStructure';
 import type { TextbookPage } from '../../curriculum/types';
-import type { SchoolLaterReviewItem } from '../../progress/schoolProgressRepository';
+import type { SchoolLaterReviewItem } from '../../progress/schoolProgressSummary';
 import { Button } from '../ui/Button';
 
 type Props = { completedPageIds: string[]; currentPageId: string; laterReviewItems: SchoolLaterReviewItem[]; onOpenPage: (page: TextbookPage) => void; onOpenExtra?: () => void };

@@ -1,5 +1,6 @@
-import type { GrowthSummary, LearningItem } from './localProgressRepository';
-import type { SchoolLaterReviewItem, SchoolProgressSummary, SchoolReviewItem } from './schoolProgressRepository';
+import type { GrowthSummary } from './extraProgressSummary';
+import type { LearningItem } from './learningEvents';
+import type { SchoolLaterReviewItem, SchoolProgressSummary, SchoolReviewItem } from './schoolProgressSummary';
 
 export type TodayReviewItem =
   | { source: 'school-later'; item: SchoolLaterReviewItem }

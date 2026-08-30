@@ -23,9 +23,9 @@ describe('App', () => {
       ] }),
     }));
     renderWithLearningData(<App />);
-    expect(await screen.findByRole('heading', { name: '今天继续学习' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '今天继续学习' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '今日学习' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /看故事学英语/ })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: /看故事学英语/ })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Level 1/ })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: '剧集书架' }));
     expect(screen.getByRole('button', { name: /Level 1/ })).toBeInTheDocument();

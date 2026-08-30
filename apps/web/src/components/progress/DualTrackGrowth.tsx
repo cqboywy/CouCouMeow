@@ -1,7 +1,8 @@
 import { BookOpen, Film, Sparkles } from 'lucide-react';
 import { useState } from 'react';
-import type { GrowthSummary, LearningItem } from '../../progress/localProgressRepository';
-import type { SchoolProgressSummary, SchoolReviewItem } from '../../progress/schoolProgressRepository';
+import type { GrowthSummary } from '../../progress/extraProgressSummary';
+import type { LearningItem } from '../../progress/learningEvents';
+import type { SchoolProgressSummary, SchoolReviewItem } from '../../progress/schoolProgressSummary';
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';
 import { GrowthRecord } from './GrowthRecord';

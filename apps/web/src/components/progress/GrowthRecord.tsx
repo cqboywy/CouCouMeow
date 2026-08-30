@@ -1,6 +1,7 @@
 import { BookOpen, CalendarDays, Sparkles } from 'lucide-react';
 import { useRef, useState } from 'react';
-import type { GrowthSummary, LearningItem, MasteryItem } from '../../progress/localProgressRepository';
+import type { GrowthSummary, MasteryItem } from '../../progress/extraProgressSummary';
+import type { LearningItem } from '../../progress/learningEvents';
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';
 
