@@ -2,7 +2,7 @@
   "kind": "school_textbook",
   "schema_version": 1,
   "content_version": 1,
-  "content_hash": "9b70261a738a5ce89d769a878d5bed7cfbddc07217ad769ea7bfe495dd99e397",
+  "content_hash": "190732aadf766145d486a3e79cfdcb8401a83e385709100e387e559272d1d224",
   "textbook": {
     "content_key": "pep-grade4-upper",
     "curriculum": "PEP",
@@ -12594,6 +12594,548 @@
       "answer": "play",
       "options": [],
       "hint": "一起玩是 play together。"
+    }
+  ],
+  "lesson_items": [
+    {
+      "lesson_key": "pep4a-u1-l1",
+      "item_key": "pep4a-u1-family",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l1",
+      "item_key": "pep4a-u1-chores",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l1",
+      "item_key": "pep4a-u1-sweep-floor",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l1",
+      "item_key": "pep4a-u1-clean-room",
+      "sequence_no": 4,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l1",
+      "item_key": "pep4a-u1-can-you-help",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l1",
+      "item_key": "pep4a-u1-yes-i-can",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l2",
+      "item_key": "pep4a-u1-farmer",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l2",
+      "item_key": "pep4a-u1-nurse",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l2",
+      "item_key": "pep4a-u1-doctor",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l2",
+      "item_key": "pep4a-u1-office-worker",
+      "sequence_no": 4,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l2",
+      "item_key": "pep4a-u1-factory-worker",
+      "sequence_no": 5,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l2",
+      "item_key": "pep4a-u1-whats-job",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l2",
+      "item_key": "pep4a-u1-shes-doctor",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l3",
+      "item_key": "pep4a-u1-ch-1",
+      "sequence_no": 1,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l3",
+      "item_key": "pep4a-u1-ch-2",
+      "sequence_no": 2,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l3",
+      "item_key": "pep4a-u1-ch-3",
+      "sequence_no": 3,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l3",
+      "item_key": "pep4a-u1-ch-4",
+      "sequence_no": 4,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l3",
+      "item_key": "pep4a-u1-ch-5",
+      "sequence_no": 5,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l3",
+      "item_key": "pep4a-u1-ch-6",
+      "sequence_no": 6,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l4",
+      "item_key": "pep4a-u1-cook",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l4",
+      "item_key": "pep4a-u1-look-after",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l4",
+      "item_key": "pep4a-u1-sweep-floor",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l4",
+      "item_key": "pep4a-u1-clean-room",
+      "sequence_no": 4,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l4",
+      "item_key": "pep4a-u1-i-can-cook",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l4",
+      "item_key": "pep4a-u1-we-can-chores",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l5",
+      "item_key": "pep4a-u1-nurse",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l5",
+      "item_key": "pep4a-u1-look-after",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l5",
+      "item_key": "pep4a-u1-sweep-floor",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l5",
+      "item_key": "pep4a-u1-mum-great-nurse",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l5",
+      "item_key": "pep4a-u1-look-after-sister",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-farmer",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-nurse",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-doctor",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-cook",
+      "sequence_no": 4,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-look-after",
+      "sequence_no": 5,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-sweep-floor",
+      "sequence_no": 6,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-happy-family",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-cook-together",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-ch-1",
+      "sequence_no": 1,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-ch-2",
+      "sequence_no": 2,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-ch-3",
+      "sequence_no": 3,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-ch-4",
+      "sequence_no": 4,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-ch-5",
+      "sequence_no": 5,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u1-l6",
+      "item_key": "pep4a-u1-ch-6",
+      "sequence_no": 6,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l1",
+      "item_key": "pep4a-u1-friend",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l1",
+      "item_key": "pep4a-u1-tall",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l1",
+      "item_key": "pep4a-u1-short",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l1",
+      "item_key": "pep4a-u1-friends-special",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l1",
+      "item_key": "pep4a-u1-get-along",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-tall",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-short",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-strong",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-quiet",
+      "sequence_no": 4,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-kind",
+      "sequence_no": 5,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-long-hair",
+      "sequence_no": 6,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-short-hair",
+      "sequence_no": 7,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-tall-strong",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-short-hair",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l2",
+      "item_key": "pep4a-u1-also-kind",
+      "sequence_no": 3,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l3",
+      "item_key": "pep4a-u1-sh-1",
+      "sequence_no": 1,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l3",
+      "item_key": "pep4a-u1-sh-2",
+      "sequence_no": 2,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l3",
+      "item_key": "pep4a-u1-sh-3",
+      "sequence_no": 3,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l3",
+      "item_key": "pep4a-u1-sh-4",
+      "sequence_no": 4,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l3",
+      "item_key": "pep4a-u1-sh-5",
+      "sequence_no": 5,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l3",
+      "item_key": "pep4a-u1-sh-6",
+      "sequence_no": 6,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l4",
+      "item_key": "pep4a-u1-read-books",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l4",
+      "item_key": "pep4a-u1-play-football",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l4",
+      "item_key": "pep4a-u1-help",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l4",
+      "item_key": "pep4a-u1-best-friend",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l4",
+      "item_key": "pep4a-u1-reads-books",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l4",
+      "item_key": "pep4a-u1-helps-english",
+      "sequence_no": 3,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l5",
+      "item_key": "pep4a-u1-quiet",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l5",
+      "item_key": "pep4a-u1-kind",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l5",
+      "item_key": "pep4a-u1-read-books",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l5",
+      "item_key": "pep4a-u1-liu-jia",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l5",
+      "item_key": "pep4a-u1-together-read",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-friend",
+      "sequence_no": 1,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-tall",
+      "sequence_no": 2,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-short",
+      "sequence_no": 3,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-read-books",
+      "sequence_no": 4,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-play-football",
+      "sequence_no": 5,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-help",
+      "sequence_no": 6,
+      "item_role": "vocabulary"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-friend-name",
+      "sequence_no": 1,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-often-play",
+      "sequence_no": 2,
+      "item_role": "sentence"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-sh-1",
+      "sequence_no": 1,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-sh-2",
+      "sequence_no": 2,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-sh-3",
+      "sequence_no": 3,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-sh-4",
+      "sequence_no": 4,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-sh-5",
+      "sequence_no": 5,
+      "item_role": "phonics"
+    },
+    {
+      "lesson_key": "pep4a-u2-l6",
+      "item_key": "pep4a-u1-sh-6",
+      "sequence_no": 6,
+      "item_role": "phonics"
     }
   ]
 }

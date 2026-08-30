@@ -163,6 +163,7 @@ class SupabaseStaticContractTest(unittest.TestCase):
             "school_pages",
             "school_content_items",
             "school_page_items",
+            "school_lesson_items",
             "school_exercises",
         )
         for table in school_tables:

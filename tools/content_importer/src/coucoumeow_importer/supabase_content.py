@@ -88,6 +88,7 @@ def import_package(
             "lessons": len(package.lessons),
             "pages": len(package.pages),
             "items": len(package.items),
+            "lesson_items": len(package.lesson_items),
             "exercises": len(package.exercises),
         }
     )

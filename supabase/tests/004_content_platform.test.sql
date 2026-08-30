@@ -1,6 +1,6 @@
 begin;
 
-select plan(17);
+select plan(18);
 
 select has_table('public', 'school_textbooks');
 select has_table('public', 'school_units');
@@ -8,6 +8,7 @@ select has_table('public', 'school_lessons');
 select has_table('public', 'school_pages');
 select has_table('public', 'school_content_items');
 select has_table('public', 'school_page_items');
+select has_table('public', 'school_lesson_items');
 select has_table('public', 'school_exercises');
 
 insert into auth.users (

@@ -83,6 +83,13 @@ class PageItemRecord(StrictModel):
     note: str = ""
 
 
+class LessonItemRecord(StrictModel):
+    lesson_key: ContentKey
+    item_key: ContentKey
+    sequence_no: PositiveInt
+    item_role: Literal["vocabulary", "sentence", "phonics"]
+
+
 class ExerciseRecord(StrictModel):
     content_key: ContentKey
     lesson_key: ContentKey | None = None
@@ -113,6 +120,7 @@ class SchoolTextbookPackage(StrictModel):
     lessons: list[LessonRecord]
     pages: list[PageRecord]
     items: list[SchoolItemRecord]
+    lesson_items: list[LessonItemRecord]
     page_items: list[PageItemRecord]
     exercises: list[ExerciseRecord]
 
@@ -136,6 +144,11 @@ class SchoolTextbookPackage(StrictModel):
         for link in self.page_items:
             if link.page_key not in page_keys:
                 raise ValueError(f"missing page {link.page_key}")
+            if link.item_key not in item_keys:
+                raise ValueError(f"missing item {link.item_key}")
+        for link in self.lesson_items:
+            if link.lesson_key not in lesson_keys:
+                raise ValueError(f"missing lesson {link.lesson_key}")
             if link.item_key not in item_keys:
                 raise ValueError(f"missing item {link.item_key}")
         for exercise in self.exercises:

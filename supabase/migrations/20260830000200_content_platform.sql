@@ -84,6 +84,15 @@ create table public.school_page_items (
   unique (page_id, item_role, sequence_no)
 );
 
+create table public.school_lesson_items (
+  lesson_id uuid not null references public.school_lessons(id) on delete cascade,
+  item_id uuid not null references public.school_content_items(id) on delete cascade,
+  sequence_no integer not null check (sequence_no > 0),
+  item_role text not null check (item_role in ('vocabulary', 'sentence', 'phonics')),
+  primary key (lesson_id, item_id, item_role),
+  unique (lesson_id, item_role, sequence_no)
+);
+
 create table public.school_exercises (
   id uuid primary key default gen_random_uuid(),
   textbook_id uuid not null references public.school_textbooks(id) on delete cascade,
@@ -105,6 +114,7 @@ create index school_units_textbook_sequence_idx on public.school_units(textbook_
 create index school_lessons_unit_sequence_idx on public.school_lessons(unit_id, sequence_no);
 create index school_pages_textbook_page_idx on public.school_pages(textbook_id, printed_page);
 create index school_items_textbook_kind_idx on public.school_content_items(textbook_id, item_kind);
+create index school_lesson_items_lesson_idx on public.school_lesson_items(lesson_id, item_role, sequence_no);
 create index school_exercises_lesson_idx on public.school_exercises(lesson_id) where lesson_id is not null;
 create index school_exercises_page_idx on public.school_exercises(page_id) where page_id is not null;
 
@@ -162,6 +172,7 @@ alter table public.school_lessons enable row level security;
 alter table public.school_pages enable row level security;
 alter table public.school_content_items enable row level security;
 alter table public.school_page_items enable row level security;
+alter table public.school_lesson_items enable row level security;
 alter table public.school_exercises enable row level security;
 
 create policy school_textbooks_read_published
@@ -204,6 +215,15 @@ create policy school_page_items_read_published
     where school_pages.id = school_page_items.page_id
       and school_textbooks.content_status = 'published'
   ));
+create policy school_lesson_items_read_published
+  on public.school_lesson_items for select to authenticated
+  using (exists (
+    select 1
+    from public.school_lessons
+    join public.school_textbooks on school_textbooks.id = school_lessons.textbook_id
+    where school_lessons.id = school_lesson_items.lesson_id
+      and school_textbooks.content_status = 'published'
+  ));
 create policy school_exercises_read_published
   on public.school_exercises for select to authenticated
   using (exists (
@@ -219,6 +239,7 @@ grant select on table
   public.school_pages,
   public.school_content_items,
   public.school_page_items,
+  public.school_lesson_items,
   public.school_exercises
 to authenticated;
 
@@ -229,6 +250,7 @@ grant all privileges on table
   public.school_pages,
   public.school_content_items,
   public.school_page_items,
+  public.school_lesson_items,
   public.school_exercises
 to service_role;
 
@@ -246,6 +268,7 @@ declare
   v_page jsonb;
   v_item jsonb;
   v_link jsonb;
+  v_lesson_link jsonb;
   v_exercise jsonb;
   v_unit_id uuid;
   v_lesson_id uuid;
@@ -339,6 +362,19 @@ begin
       coalesce(v_page -> 'sections', '[]'::jsonb),
       coalesce(v_page -> 'practice_prompts', '[]'::jsonb),
       array(select value from jsonb_array_elements_text(coalesce(v_page -> 'finish_items', '[]'::jsonb)))
+    );
+  end loop;
+
+  for v_lesson_link in select value from jsonb_array_elements(p_package -> 'lesson_items') loop
+    select id into strict v_lesson_id from public.school_lessons
+    where textbook_id = v_textbook_id and content_key = v_lesson_link ->> 'lesson_key';
+    select id into strict v_item_id from public.school_content_items
+    where textbook_id = v_textbook_id and content_key = v_lesson_link ->> 'item_key';
+    insert into public.school_lesson_items (
+      lesson_id, item_id, sequence_no, item_role
+    ) values (
+      v_lesson_id, v_item_id, (v_lesson_link ->> 'sequence_no')::integer,
+      v_lesson_link ->> 'item_role'
     );
   end loop;
 
