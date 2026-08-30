@@ -1,12 +1,13 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from './App';
+import { renderWithLearningData } from './test/renderWithLearningData';
 
 afterEach(() => vi.unstubAllGlobals());
 
 describe('App', () => {
   it('renders the official product names', () => {
-    render(<App />);
+    renderWithLearningData(<App />);
 
     expect(screen.getByRole('heading', { name: '凑凑喵英语乐园' })).toBeInTheDocument();
     expect(screen.getByText('CouCouMeow English Land')).toBeInTheDocument();
@@ -21,7 +22,7 @@ describe('App', () => {
         { id: 'l1-bat-and-friends-002-lost-in-the-rain', level: 1, series_title: 'Bat and Friends', episode_number: 2, title: 'Lost in the Rain', local_video_filename: '002_Bat and Friends 2_Lost in the Rain.mp4', is_published: true, is_learned: false },
       ] }),
     }));
-    render(<App />);
+    renderWithLearningData(<App />);
     expect(await screen.findByRole('heading', { name: '今天继续学习' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '今日学习' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /看故事学英语/ })).toBeInTheDocument();
@@ -39,10 +40,11 @@ describe('App', () => {
   });
 
   it('opens an episode learning view', async () => {
-    vi.stubGlobal('fetch', vi.fn()
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ items: [{ id: 'l1-001-dino-buddies-the-park', level: 1, title: 'Dino Buddies 1: The Park', local_video_filename: '001_Dino Buddies 1_The Park.mp4', is_published: true, is_learned: false }] }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ learned_episodes: 0, total_words: 17, practice_count: 0, mistake_count: 0 }) })
-      .mockResolvedValueOnce({ ok: true, json: async () => ({
+    vi.stubGlobal('fetch', vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.endsWith('/stats')) return { ok: true, json: async () => ({ learned_episodes: 0, total_words: 17, practice_count: 0, mistake_count: 0 }) };
+      if (url.endsWith('/episodes')) return { ok: true, json: async () => ({ items: [{ id: 'l1-001-dino-buddies-the-park', level: 1, title: 'Dino Buddies 1: The Park', local_video_filename: '001_Dino Buddies 1_The Park.mp4', is_published: true, is_learned: false }] }) };
+      return { ok: true, json: async () => ({
         id: 'l1-001-dino-buddies-the-park', level: 1, title: 'Dino Buddies 1: The Park',
         chinese_title: '恐龙伙伴：公园奇遇', local_video_filename: '001_Dino Buddies 1_The Park.mp4',
         story_summary: 'Rex 想和其他恐龙交朋友，却被大家误会了。',
@@ -52,9 +54,9 @@ describe('App', () => {
         knowledge: [{ id: 'knowledge-1', title: 'was / were + 地点', explanation: '表示过去在哪里。', examples: ['I was in the library.'] }],
         comprehension_questions: ['Rex 在哪里？'], retell_steps: ['Rex 来到公园。'],
         past_tense_pairs: [{ base: 'see', past: 'saw', meaning: '看见' }],
-      }) })
-    );
-    render(<App />);
+      }) };
+    }));
+    renderWithLearningData(<App />);
     fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
     expect(await screen.findByText('请在本地打开对应视频观看')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '恐龙伙伴：公园奇遇' })).toBeInTheDocument();
@@ -100,7 +102,7 @@ describe('App', () => {
       return { ok: true, json: async () => body };
     }));
 
-    render(<App />);
+    renderWithLearningData(<App />);
     fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
     const play = (await screen.findAllByRole('button', { name: '朗读：One day Rex was in the park.' }))[0];
     fireEvent.click(play);
@@ -132,7 +134,7 @@ describe('App', () => {
       const body = url.endsWith('/episodes') ? { items: [episode] } : url.endsWith('/stats') ? { learned_episodes: 0, total_words: 2, practice_count: 0, mistake_count: 0 } : episode;
       return { ok: true, json: async () => body };
     }));
-    render(<App />);
+    renderWithLearningData(<App />);
     fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
     fireEvent.click(await screen.findByRole('button', { name: '2. 单词听写' }));
     expect(screen.getByRole('button', { name: '写出来' })).toBeInTheDocument();
@@ -170,7 +172,7 @@ describe('App', () => {
       const body = url.endsWith('/episodes') ? { items: [episode] } : url.endsWith('/stats') ? { learned_episodes: 0, total_words: 1, practice_count: 0, mistake_count: 0 } : url.endsWith('/practice/dictation') ? { attempt_id: 'wet-attempt', is_correct: true, message: '太棒啦，这个单词被你抓住了！', similarity: null } : episode;
       return { ok: true, json: async () => body };
     }));
-    render(<App />);
+    renderWithLearningData(<App />);
     fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
     fireEvent.click(await screen.findByRole('button', { name: '2. 单词听写' }));
     fireEvent.change(screen.getByLabelText('我写的是'), { target: { value: 'wet' } });

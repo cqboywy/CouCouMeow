@@ -6,5 +6,9 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    pool: 'threads',
+    maxWorkers: 1,
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
   },
 });

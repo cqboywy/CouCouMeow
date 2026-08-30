@@ -1,7 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App, applyLocalEpisodeStatus, getSchoolReviewDestination, selectVisibleProgress } from './App';
 import type { GrowthSummary } from './progress/localProgressRepository';
+import { renderWithLearningData } from './test/renderWithLearningData';
 
 const episode = {
   id: 'l1-001-dino-buddies-the-park',
@@ -46,7 +47,7 @@ describe('motion interface', () => {
       return { ok: true, json: async () => body };
     }));
 
-    render(<App />);
+    renderWithLearningData(<App />);
 
     expect(await screen.findByRole('region', { name: '今日校内学习舞台' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '今天，把课本学轻松一点' })).toHaveClass('motion-heading');
@@ -68,7 +69,7 @@ describe('motion interface', () => {
       return { ok: true, json: async () => body };
     }));
 
-    render(<App />);
+    renderWithLearningData(<App />);
 
     fireEvent.click(await screen.findByRole('button', { name: '校内同步' }));
     expect(screen.getByText('继续学习 · 课本第 2 页')).toBeInTheDocument();
@@ -97,7 +98,7 @@ describe('motion interface', () => {
     window.history.replaceState(null, '', '/?ui=motion');
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
 
-    render(<App />);
+    renderWithLearningData(<App />);
 
     fireEvent.click(await screen.findByRole('button', { name: '课外动画' }));
     expect(screen.getByRole('button', { name: /Level 1 3 集已发布/ })).toBeInTheDocument();
