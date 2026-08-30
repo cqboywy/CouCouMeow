@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 
 import pytest
-
 from coucoumeow_importer.content_packages import (
     ContentPackageError,
     ExtraEpisodePackage,
@@ -74,6 +73,7 @@ def valid_school_package() -> dict:
                 "attributes": {},
             }
         ],
+        "lesson_items": [],
         "page_items": [
             {
                 "page_key": "pep4a-u1-p2",

@@ -1,6 +1,6 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { App, applyLocalEpisodeStatus, getSchoolReviewDestination, selectVisibleProgress } from './App';
+import { App, applyLocalEpisodeStatus, getSchoolReviewDestination } from './App';
 import type { GrowthSummary } from './progress/extraProgressSummary';
 import { renderWithLearningData } from './test/renderWithLearningData';
 
@@ -21,12 +21,6 @@ afterEach(() => {
 });
 
 describe('motion interface', () => {
-  it('keeps real local growth data visible unless demo mode is explicitly requested', () => {
-    const actual = { today: { day: '2026-08-29', practiceCount: 1, newWords: [], newSentences: [], newPatterns: [], newEpisodes: [] }, days: [], items: { words: [], sentences: [], patterns: [], episodes: [] }, reviewItems: [] } satisfies GrowthSummary;
-
-    expect(selectVisibleProgress(new URLSearchParams('ui=motion'), actual)).toBe(actual);
-  });
-
   it('marks completed extracurricular episodes in the bookshelf from local growth data', () => {
     const summary = { today: { day: '2026-08-29', practiceCount: 0, newWords: [], newSentences: [], newPatterns: [], newEpisodes: [] }, days: [], items: { words: [], sentences: [], patterns: [], episodes: [{ id: episode.id, kind: 'episode', english: episode.title, chinese: '', episodeId: episode.id, firstLearnedDay: '2026-08-29', latestPracticeDay: '2026-08-29', correctCount: 1, totalPracticeCount: 1 }] }, reviewItems: [] } satisfies GrowthSummary;
 

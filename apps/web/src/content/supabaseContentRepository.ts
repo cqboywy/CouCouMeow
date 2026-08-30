@@ -2,7 +2,7 @@ import { ContentIntegrityError, type ContentRepository } from './contentReposito
 import type { SupabaseContentGateway } from './supabaseContentGateway';
 import type { ContentCatalog, ExtraEpisode, SchoolExercise, SchoolLearningItem, SchoolLesson, SchoolPage, SchoolTextbook } from './types';
 
-const ordered = <T extends { sequence_no: number }>(rows: T[]) => [...rows].sort((a, b) => a.sequence_no - b.sequence_no);
+const ordered = <T extends Record<string, any>>(rows: T[]) => [...rows].sort((a, b) => Number(a.sequence_no) - Number(b.sequence_no));
 const findOrThrow = <T>(map: Map<string, T>, key: string, kind: string): T => {
   const value = map.get(key);
   if (!value) throw new ContentIntegrityError(`missing ${kind} ${key}`);

@@ -5,14 +5,12 @@ from pathlib import Path
 
 import httpx
 import pytest
-
 from coucoumeow_importer.content_packages import load_content_package
 from coucoumeow_importer.supabase_content import (
     ContentImportError,
     SupabaseContentClient,
     import_package,
 )
-
 
 ROOT = Path(__file__).resolve().parents[3]
 SCHOOL = ROOT / "content/school/pep-grade4-upper/manifest.json"
@@ -44,7 +42,7 @@ def test_school_import_calls_rpc_then_publish() -> None:
     ]
     assert requests[1][2] == {"p_package": json.loads(SCHOOL.read_text())}
     assert requests[2][2] == {
-        "p_kind": "school_textbook",
+        "p_kind": "school",
         "p_content_key": "pep-grade4-upper",
     }
 

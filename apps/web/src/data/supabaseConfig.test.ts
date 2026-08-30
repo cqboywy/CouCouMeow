@@ -13,4 +13,11 @@ describe('readSupabaseConfig', () => {
       VITE_SUPABASE_ANON_KEY: ' anon-key ',
     })).toEqual({ url: 'https://project.supabase.co', anonKey: 'anon-key' });
   });
+
+  it('accepts the current Supabase publishable key variable', () => {
+    expect(readSupabaseConfig({
+      VITE_SUPABASE_URL: 'https://project.supabase.co',
+      VITE_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_example',
+    })).toEqual({ url: 'https://project.supabase.co', anonKey: 'sb_publishable_example' });
+  });
 });

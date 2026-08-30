@@ -2,7 +2,7 @@
 
 CouCouMeow English Land 是面向 10 岁女孩的家庭英语巩固系统。网站采用 iPad 优先设计，同时完整支持手机和电脑浏览器。
 
-系统由 React 前端、FastAPI 后端、Supabase 数据库与认证、离线字幕工具、类型化 API 客户端和自动测试组成。学习进度仅保存在 Supabase；浏览器中的旧版校内与课外记录会在首次线上启动时安全导入。网站不读取或上传本地 MP4/SRT；入库工具在家长电脑独立运行。
+线上学习系统由 React 前端、Supabase 内容数据库/认证/学习事件账本、管理端内容导入工具和自动测试组成。教材、课外内容与学习进度都来自 Supabase；浏览器中的旧版校内与课外记录只会在首次线上启动时读取并安全导入。网站不读取或上传本地 MP4/SRT；内容包入库工具在管理电脑独立运行。
 
 ## 快速启动
 
@@ -14,21 +14,15 @@ uv sync --all-packages --dev --python 3.12
 cp apps/web/.env.example apps/web/.env.local
 ```
 
-在 `apps/web/.env.local` 填写 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`。真实值不得提交。完整步骤见[线上学习数据迁移指南](docs/development/supabase-learning-migration.md)。
+在 `apps/web/.env.local` 填写 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_PUBLISHABLE_KEY`（旧项目也兼容 `VITE_SUPABASE_ANON_KEY`）。真实值不得提交。完整步骤见[线上学习数据迁移指南](docs/development/supabase-learning-migration.md)。
 
-启动后端：
-
-```bash
-uv run --package coucoumeow-api uvicorn coucoumeow_api.main:create_app --factory --reload
-```
-
-另开一个终端启动前端：
+启动前端：
 
 ```bash
 pnpm dev:web
 ```
 
-访问 `http://localhost:5173`。API 文档位于 `http://localhost:8000/docs`。
+访问 `http://localhost:5173`。当前 Web 学习流程不依赖 FastAPI；`apps/api` 仅保留给内容处理工具和后续管理服务。
 
 ## 本地字幕预检
 

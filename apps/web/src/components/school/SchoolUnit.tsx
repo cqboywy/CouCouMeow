@@ -1,5 +1,5 @@
 import { BookOpen, CheckCircle2, ChevronRight } from 'lucide-react';
-import type { CurriculumLesson, CurriculumUnit } from '../../curriculum/types';
+import type { SchoolLesson as CurriculumLesson, SchoolUnit as CurriculumUnit } from '../../content/types';
 
 export function SchoolUnit({ unit, completedLessonIds, currentLessonId, onOpenLesson }: { unit: CurriculumUnit; completedLessonIds: string[]; currentLessonId: string; onOpenLesson: (lesson: CurriculumLesson) => void }) {
   const completedCount = unit.lessons.filter(lesson => completedLessonIds.includes(lesson.id)).length;

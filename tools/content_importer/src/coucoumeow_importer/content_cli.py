@@ -9,7 +9,6 @@ import typer
 from .content_packages import ContentPackageError, load_content_package
 from .supabase_content import ContentImportError, SupabaseContentClient, import_package
 
-
 app = typer.Typer(help="校内与课外内容包校验和 Supabase 发布工具")
 
 

@@ -97,7 +97,7 @@ def import_package(
         if publish and existing.get("content_status") != "published":
             client.call_rpc(
                 "publish_content",
-                {"p_kind": package.kind, "p_content_key": content_key},
+                {"p_kind": "extra" if is_extra else "school", "p_content_key": content_key},
             )
             return ImportResult(content_key, package.content_hash, "published", False, counts)
         return ImportResult(content_key, package.content_hash, "skipped", True, counts)
@@ -110,7 +110,7 @@ def import_package(
     if publish:
         client.call_rpc(
             "publish_content",
-            {"p_kind": package.kind, "p_content_key": content_key},
+            {"p_kind": "extra" if is_extra else "school", "p_content_key": content_key},
         )
         status = "published"
     return ImportResult(content_key, package.content_hash, status, False, counts)

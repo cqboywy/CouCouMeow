@@ -7,7 +7,7 @@
 校验不访问网络，不需要任何凭据：
 
 ```bash
-uv run coucoumeow-content validate content/school/pep-grade4-upper/manifest.json
+uv run --project tools/content_importer coucoumeow-content validate content/school/pep-grade4-upper/manifest.json
 ```
 
 ## 导入与发布
@@ -17,15 +17,15 @@ Service Role Key 只可放在本机管理终端或受保护的 CI Secret 中，�
 ```bash
 export SUPABASE_URL="https://<project-ref>.supabase.co"
 export SUPABASE_SERVICE_ROLE_KEY="<service-role-key>"
-uv run coucoumeow-content import content/school/pep-grade4-upper/manifest.json --draft
-uv run coucoumeow-content import content/school/pep-grade4-upper/manifest.json --publish
+uv run --project tools/content_importer coucoumeow-content import content/school/pep-grade4-upper/manifest.json --draft
+uv run --project tools/content_importer coucoumeow-content import content/school/pep-grade4-upper/manifest.json --publish
 ```
 
 课外内容逐个导入：
 
 ```bash
 for manifest in content/extra/*/manifest.json; do
-  uv run coucoumeow-content import "$manifest" --publish
+  uv run --project tools/content_importer coucoumeow-content import "$manifest" --publish
 done
 ```
 

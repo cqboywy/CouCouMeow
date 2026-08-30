@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getDemoGrowthSummary } from './demoGrowthSummary';
+import { getDemoGrowthSummary } from '../test/demoGrowthSummary';
 
 describe('getDemoGrowthSummary', () => {
   it('creates a varied four-day growth record for the visual demo', () => {

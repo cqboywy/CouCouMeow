@@ -395,15 +395,15 @@ begin
     v_lesson_id := null;
     v_page_id := null;
     v_item_id := null;
-    if v_exercise ? 'lesson_key' then
+    if length(coalesce(v_exercise ->> 'lesson_key', '')) > 0 then
       select id into strict v_lesson_id from public.school_lessons
       where textbook_id = v_textbook_id and content_key = v_exercise ->> 'lesson_key';
     end if;
-    if v_exercise ? 'page_key' then
+    if length(coalesce(v_exercise ->> 'page_key', '')) > 0 then
       select id into strict v_page_id from public.school_pages
       where textbook_id = v_textbook_id and content_key = v_exercise ->> 'page_key';
     end if;
-    if v_exercise ? 'item_key' then
+    if length(coalesce(v_exercise ->> 'item_key', '')) > 0 then
       select id into strict v_item_id from public.school_content_items
       where textbook_id = v_textbook_id and content_key = v_exercise ->> 'item_key';
     end if;

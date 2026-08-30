@@ -1,4 +1,4 @@
-import type { SchoolLearningItem } from '../curriculum/types';
+import type { SchoolLearningItem } from '../content/types';
 
 export type LearningTrack = 'extra' | 'school';
 export type LearningEventType =

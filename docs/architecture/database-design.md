@@ -1,12 +1,12 @@
 # 数据库设计
 
-内容表为 `lf_episodes`、`lf_sentences`、`lf_vocab`、`lf_knowledge`。早期 API 学习表为 `profiles`、`practice_sessions`、`practice_attempts`、`mistake_items`。当前 Web 学习数据层使用 `learning_events`、`learner_preferences` 与 `local_progress_imports`；系统表为 `content_import_jobs`。
+校内内容使用八张规范化表：`school_textbooks`、`school_units`、`school_lessons`、`school_pages`、`school_content_items`、`school_lesson_items`、`school_page_items`、`school_exercises`。课外内容使用 `lf_episodes`、`lf_sentences`、`lf_vocab`、`lf_knowledge`。当前 Web 学习数据层使用 `learning_events`、`learner_preferences` 与 `local_progress_imports`；早期 API 学习表继续保留但不驱动 Web。
 
 `lf_episodes` 的展示层级是 `Level → series_title（剧集）→ episode_number（集序号）→ title（本集标题）`。同一 Level、同一剧集内的集序号唯一；例如 `Level 1 → Bat and Friends → 第 2 集 → Lost in the Rain`。
 
-迁移文件包含外键、唯一约束、内容替换函数与 RLS。登录用户只能读取已发布内容和自己的学习数据；内容写入及替换函数只授予服务端角色。
+所有 UI 和学习事件使用稳定的 `content_key`，数据库关系使用 UUID。`school_lesson_items` 精确保留每课的词汇、句子和拼读顺序，`school_page_items` 保存页面重点，练习由课时或页面唯一拥有。迁移文件包含外键、唯一约束、事务导入/发布函数与 RLS。登录用户只能读取完整的已发布内容树和自己的学习数据；内容写入及发布函数只授予 `service_role`。
 
-当前只运行离线契约测试，未声称 PostgreSQL/RLS 已在真实 Supabase 执行。首次连接云端前必须在空白开发项目执行 migration 与 pgTAP 验证。
+内容源文件位于 `content/**/manifest.json`，只由管理端导入工具读取，不进入 Web 生产包。导入先写草稿，发布 RPC 校验根记录及子记录后才对登录用户可见。
 
 ## Web 学习事件账本
 

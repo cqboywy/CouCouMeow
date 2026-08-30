@@ -188,6 +188,24 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assertIn("authenticated user cannot execute the school importer", database_test)
         self.assertIn("draft extracurricular episode is hidden", database_test)
 
+    def test_web_runtime_has_no_bundled_content_or_local_fallback(self) -> None:
+        web_source = ROOT / "apps" / "web" / "src"
+        self.assertFalse(any((web_source / "curriculum").glob("*.ts*")))
+        for obsolete in (
+            web_source / "extra" / "localExtraContent.ts",
+            web_source / "hostedPreview.ts",
+            web_source / "progress" / "localProgressRepository.ts",
+            web_source / "progress" / "schoolProgressRepository.ts",
+        ):
+            self.assertFalse(obsolete.exists(), f"obsolete runtime source remains: {obsolete}")
+        production = "\n".join(
+            path.read_text()
+            for path in web_source.rglob("*.ts*")
+            if ".test." not in path.name and "test" not in path.parts
+        )
+        for forbidden in ("localExtraContent", "hostedPreviewApi", "VITE_API_BASE_URL", "/api/v1"):
+            self.assertNotIn(forbidden, production)
+
     def test_replace_function_has_exactly_the_public_contract_signature(self) -> None:
         declaration = re.search(
             r"create or replace function public\.replace_episode_content\((.*?)\) "
@@ -284,7 +302,7 @@ class SupabaseStaticContractTest(unittest.TestCase):
         for path in (ROOT_ENV_EXAMPLE, WEB_ENV_EXAMPLE):
             content = path.read_text()
             self.assertIn("VITE_SUPABASE_URL=", content)
-            self.assertIn("VITE_SUPABASE_ANON_KEY=", content)
+            self.assertIn("VITE_SUPABASE_PUBLISHABLE_KEY=", content)
             self.assertNotRegex(content, r"https://[a-z0-9]{8,}\.supabase\.co")
             self.assertNotRegex(content, r"eyJ[a-zA-Z0-9_-]{20,}")
         self.assertTrue(LEARNING_MIGRATION_GUIDE.is_file())
