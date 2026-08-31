@@ -1,5 +1,5 @@
 import type { LearningEvent, LearningItem, SchoolEventPayload } from '../progress/learningEvents';
-import type { SchoolLearningItem } from '../curriculum/types';
+import type { SchoolLearningItem } from '../content/types';
 import type { LearningProgressRepository, LegacySourceKey } from './learningProgressRepository';
 
 const EXTRA_KEY: LegacySourceKey = 'coucoumeow.learning-progress.v1';

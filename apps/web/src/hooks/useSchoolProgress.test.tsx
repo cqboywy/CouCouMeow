@@ -1,10 +1,11 @@
 import { act, renderHook } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import { getLessonById } from '../curriculum/pepGrade4UpperUnit1';
 import { LearningDataReadyProvider } from '../data/LearningDataProvider';
 import type { LearningProgressRepository } from '../data/learningProgressRepository';
 import { useSchoolProgress } from './useSchoolProgress';
+import { ContentReadyProvider } from '../content/ContentProvider';
+import { getTestLesson, testContentCatalog } from '../test/renderWithLearningData';
 
 const createRepository = (): LearningProgressRepository => ({
   loadEvents: vi.fn(async () => []), appendEvents: vi.fn(async () => undefined),
@@ -15,8 +16,8 @@ const createRepository = (): LearningProgressRepository => ({
 describe('useSchoolProgress', () => {
   it('moves to the next lesson only after online completion is saved', async () => {
     const repository = createRepository();
-    const wrapper = ({ children }: PropsWithChildren) => <LearningDataReadyProvider userId="user-1" repository={repository} initialEvents={[]} initialSelectedTextbookId="pep4a">{children}</LearningDataReadyProvider>;
-    const lesson = getLessonById('pep4a-u1-l1')!;
+    const wrapper = ({ children }: PropsWithChildren) => <ContentReadyProvider catalog={testContentCatalog}><LearningDataReadyProvider userId="user-1" repository={repository} initialEvents={[]} initialSelectedTextbookId="pep-grade4-upper">{children}</LearningDataReadyProvider></ContentReadyProvider>;
+    const lesson = getTestLesson('pep4a-u1-l1')!;
     const { result } = renderHook(() => useSchoolProgress(), { wrapper });
 
     await act(async () => { await result.current.completeLesson(lesson); });

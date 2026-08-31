@@ -4,11 +4,14 @@ version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
     "coucoumeow-api",
+    "httpx>=0.28,<1",
+    "pydantic>=2.12,<3",
     "typer",
 ]
 
 [project.scripts]
 coucou-import = "coucoumeow_importer.cli:app"
+coucoumeow-content = "coucoumeow_importer.content_cli:app"
 
 [tool.uv.sources]
 coucoumeow-api = { workspace = true }
@@ -22,4 +25,3 @@ packages = ["src/coucoumeow_importer"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-

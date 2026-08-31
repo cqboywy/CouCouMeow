@@ -11,7 +11,8 @@ export type SupabasePublicConfig = { url: string; anonKey: string };
 
 export function readSupabaseConfig(env: Record<string, unknown>): SupabasePublicConfig {
   const url = typeof env.VITE_SUPABASE_URL === 'string' ? env.VITE_SUPABASE_URL.trim() : '';
-  const anonKey = typeof env.VITE_SUPABASE_ANON_KEY === 'string' ? env.VITE_SUPABASE_ANON_KEY.trim() : '';
+  const publicKey = env.VITE_SUPABASE_PUBLISHABLE_KEY ?? env.VITE_SUPABASE_ANON_KEY;
+  const anonKey = typeof publicKey === 'string' ? publicKey.trim() : '';
   if (!url || !anonKey) throw new SupabaseConfigurationError();
   return { url, anonKey };
 }

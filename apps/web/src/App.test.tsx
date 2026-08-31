@@ -58,10 +58,10 @@ describe('App', () => {
     }));
     renderWithLearningData(<App />);
     fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
-    expect(await screen.findByText('请在本地打开对应视频观看')).toBeInTheDocument();
+    expect(await screen.findByText('本集媒体')).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '恐龙伙伴：公园奇遇' })).toBeInTheDocument();
-    expect(screen.getByText('Rex 想和其他恐龙交朋友，却被大家误会了。')).toBeInTheDocument();
-    expect(screen.getByText('完整台词（1句）')).toBeInTheDocument();
+    expect(screen.getByText(/Rex 想在公园交朋友/)).toBeInTheDocument();
+    expect(screen.getByText('完整台词（8句）')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '开始单词听写' })).toBeInTheDocument();
     fireEvent.click(screen.getAllByRole('button', { name: '朗读句子：One day Rex was in the park.' })[0]);
     expect(screen.getByRole('status')).toHaveTextContent('这台设备暂时不能朗读英文');
@@ -143,19 +143,19 @@ describe('App', () => {
     const next = screen.getByRole('button', { name: '下一题' });
     expect(previous).toBeDisabled();
     expect(next).toBeEnabled();
-    expect(screen.getByText('第 1 / 2 题')).toBeInTheDocument();
+    expect(screen.getByText('第 1 / 8 题')).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('我写的是'), { target: { value: 'park' } });
     fireEvent.click(next);
     expect(screen.getByLabelText('我写的是')).toHaveValue('');
-    expect(screen.getByText('树')).toBeInTheDocument();
+    expect(screen.getByText('恐龙')).toBeInTheDocument();
     expect(previous).toBeEnabled();
     fireEvent.click(screen.getByRole('button', { name: '3. 句子跟读' }));
     expect(screen.getByRole('button', { name: '完成本句跟读' })).toBeDisabled();
     expect(screen.queryByText('录音后会自动识别；也可以在这里修正文字')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: '上一题' })).toBeDisabled();
-    expect(screen.getByText('第 1 / 2 题')).toBeInTheDocument();
+    expect(screen.getByText('第 1 / 8 题')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: '下一题' }));
-    expect(screen.getByRole('heading', { name: 'They ran away.' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'He saw other dinosaurs.' })).toBeInTheDocument();
     vi.unstubAllGlobals();
   });
 
@@ -175,7 +175,7 @@ describe('App', () => {
     renderWithLearningData(<App />);
     fireEvent.click(await screen.findByRole('button', { name: /继续学习/ }));
     fireEvent.click(await screen.findByRole('button', { name: '2. 单词听写' }));
-    fireEvent.change(screen.getByLabelText('我写的是'), { target: { value: 'wet' } });
+    fireEvent.change(screen.getByLabelText('我写的是'), { target: { value: 'park' } });
     fireEvent.click(screen.getByRole('button', { name: '交给凑凑喵检查' }));
 
     const feedback = await screen.findByRole('status');

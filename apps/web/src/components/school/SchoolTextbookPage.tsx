@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Volume2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import type { TextbookFocusItem, TextbookPage, TextbookPageCheck } from '../../curriculum/types';
+import type { SchoolPage as TextbookPage, TextbookFocusItem } from '../../content/types';
+type TextbookPageCheck = TextbookPage['checks'][number];
 import { useEnglishSpeech } from '../../hooks/useEnglishSpeech';
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';

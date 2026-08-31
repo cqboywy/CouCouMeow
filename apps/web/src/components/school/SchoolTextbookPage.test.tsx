@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { getTextbookPageById } from '../../curriculum/pepGrade4UpperTextbookPages';
+import { getTestPage as getTextbookPageById } from '../../test/renderWithLearningData';
 import { SchoolTextbookPage } from './SchoolTextbookPage';
 
 const page = getTextbookPageById('pep4a-u1-p3')!;

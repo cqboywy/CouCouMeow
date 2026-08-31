@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { getLessonById } from '../../curriculum/pepGrade4UpperUnit1';
+import { getTestLesson as getLessonById } from '../../test/renderWithLearningData';
 import { SchoolLesson } from './SchoolLesson';
 
 describe('SchoolLesson direct steps', () => {

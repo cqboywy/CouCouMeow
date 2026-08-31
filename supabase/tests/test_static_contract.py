@@ -17,6 +17,8 @@ MIGRATION = (SUPABASE / "migrations" / "20260826000100_initial_schema.sql").read
 ATTEMPT_EVIDENCE_MIGRATION = SUPABASE / "migrations" / "20260827000200_add_attempt_answer_method.sql"
 ONLINE_PROGRESS_MIGRATION = SUPABASE / "migrations" / "20260830000100_online_learning_progress.sql"
 ONLINE_PROGRESS_TEST = SUPABASE / "tests" / "003_online_learning_progress.test.sql"
+CONTENT_PLATFORM_MIGRATION = SUPABASE / "migrations" / "20260830000200_content_platform.sql"
+CONTENT_PLATFORM_TEST = SUPABASE / "tests" / "004_content_platform.test.sql"
 SCHEMA_TEST = (SUPABASE / "tests" / "001_schema.test.sql").read_text()
 RLS_TEST = (SUPABASE / "tests" / "002_rls.test.sql").read_text()
 SEED_PATH = SUPABASE / "seed.sql"
@@ -148,6 +150,62 @@ class SupabaseStaticContractTest(unittest.TestCase):
         self.assertIn("user a sees only its learner preference", rls_test)
         self.assertIn("user a sees only its import receipt", rls_test)
 
+    def test_content_platform_has_stable_keys_and_service_only_imports(self) -> None:
+        self.assertTrue(CONTENT_PLATFORM_MIGRATION.is_file())
+        self.assertTrue(CONTENT_PLATFORM_TEST.is_file())
+        migration = normalized(CONTENT_PLATFORM_MIGRATION.read_text())
+        database_test = normalized(CONTENT_PLATFORM_TEST.read_text())
+
+        school_tables = (
+            "school_textbooks",
+            "school_units",
+            "school_lessons",
+            "school_pages",
+            "school_content_items",
+            "school_page_items",
+            "school_lesson_items",
+            "school_exercises",
+        )
+        for table in school_tables:
+            self.assertIn(f"create table public.{table}", migration)
+            self.assertIn(f"alter table public.{table} enable row level security", migration)
+        self.assertGreaterEqual(migration.count("content_key text not null unique"), 6)
+        self.assertIn("create or replace function public.import_school_textbook", migration)
+        self.assertIn("create or replace function public.import_extra_episode", migration)
+        self.assertIn("create or replace function public.publish_content", migration)
+        for signature in (
+            "public.import_school_textbook(jsonb)",
+            "public.import_extra_episode(jsonb)",
+            "public.publish_content(text, text)",
+        ):
+            self.assertIn(f"grant execute on function {signature} to service_role", migration)
+            self.assertNotRegex(
+                migration,
+                rf"grant execute on function {re.escape(signature)} to (anon|authenticated)",
+            )
+        self.assertIn("drop column if exists is_learned", migration)
+        self.assertIn("authenticated user reads the published school textbook", database_test)
+        self.assertIn("authenticated user cannot execute the school importer", database_test)
+        self.assertIn("draft extracurricular episode is hidden", database_test)
+
+    def test_web_runtime_has_no_bundled_content_or_local_fallback(self) -> None:
+        web_source = ROOT / "apps" / "web" / "src"
+        self.assertFalse(any((web_source / "curriculum").glob("*.ts*")))
+        for obsolete in (
+            web_source / "extra" / "localExtraContent.ts",
+            web_source / "hostedPreview.ts",
+            web_source / "progress" / "localProgressRepository.ts",
+            web_source / "progress" / "schoolProgressRepository.ts",
+        ):
+            self.assertFalse(obsolete.exists(), f"obsolete runtime source remains: {obsolete}")
+        production = "\n".join(
+            path.read_text()
+            for path in web_source.rglob("*.ts*")
+            if ".test." not in path.name and "test" not in path.parts
+        )
+        for forbidden in ("localExtraContent", "hostedPreviewApi", "VITE_API_BASE_URL", "/api/v1"):
+            self.assertNotIn(forbidden, production)
+
     def test_replace_function_has_exactly_the_public_contract_signature(self) -> None:
         declaration = re.search(
             r"create or replace function public\.replace_episode_content\((.*?)\) "
@@ -244,7 +302,7 @@ class SupabaseStaticContractTest(unittest.TestCase):
         for path in (ROOT_ENV_EXAMPLE, WEB_ENV_EXAMPLE):
             content = path.read_text()
             self.assertIn("VITE_SUPABASE_URL=", content)
-            self.assertIn("VITE_SUPABASE_ANON_KEY=", content)
+            self.assertIn("VITE_SUPABASE_PUBLISHABLE_KEY=", content)
             self.assertNotRegex(content, r"https://[a-z0-9]{8,}\.supabase\.co")
             self.assertNotRegex(content, r"eyJ[a-zA-Z0-9_-]{20,}")
         self.assertTrue(LEARNING_MIGRATION_GUIDE.is_file())

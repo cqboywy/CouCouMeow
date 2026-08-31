@@ -1,11 +1,9 @@
 import { ChevronRight } from 'lucide-react';
-import { getUnitTextbookPages } from '../../curriculum/pepGrade4UpperTextbookPages';
-import type { TextbookPage } from '../../curriculum/types';
+import type { SchoolPage as TextbookPage } from '../../content/types';
 import { Button } from '../ui/Button';
 
-export function SchoolToday({ page, completedCount, onStart }: { page: TextbookPage; completedCount: number; onStart: () => void }) {
+export function SchoolToday({ page, unitPageCount, onStart }: { page: TextbookPage; unitPageCount: number; completedCount: number; onStart: () => void }) {
   const unitNumber = page.unitId.match(/-u(\d+)$/)?.[1] ?? '1';
-  const unitPageCount = getUnitTextbookPages(page.unitId).length;
   return <div className="motion-home__hero school-today">
     <h2 className="motion-heading">今天，把课本学轻松一点</h2>
     <div className="motion-episode school-today__book">

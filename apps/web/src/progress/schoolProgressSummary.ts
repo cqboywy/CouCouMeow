@@ -1,8 +1,5 @@
-import { getLessonById, pepGrade4Upper } from '../curriculum/pepGrade4UpperUnit1';
-import { getTextbookPageById, getUnitTextbookPages } from '../curriculum/pepGrade4UpperTextbookPages';
-import { pepGrade4UpperTextbookUnits } from '../curriculum/pepGrade4UpperTextbookStructure';
 import type { SchoolLearningEvent } from './learningEvents';
-import type { SchoolLearningItem } from '../curriculum/types';
+import type { SchoolLearningItem, SchoolTextbook } from '../content/types';
 
 export type SchoolMasteryItem = SchoolLearningItem & {
   source: 'school';
@@ -34,10 +31,11 @@ export type SchoolProgressSummary = {
   days: SchoolDailySummary[];
 };
 
-const orderedLessonIds = pepGrade4Upper.units.flatMap(unit => unit.lessons).map(lesson => lesson.id);
-const orderedPageIds = pepGrade4UpperTextbookUnits.flatMap(unit => getUnitTextbookPages(unit.id)).map(page => page.id);
-
-export function deriveSchoolProgress(events: SchoolLearningEvent[], selectedTextbookId: string): SchoolProgressSummary {
+export function deriveSchoolProgress(events: SchoolLearningEvent[], selectedTextbookId: string, textbook: SchoolTextbook): SchoolProgressSummary {
+  const lessons = textbook.units.flatMap(unit => unit.lessons);
+  const pages = textbook.units.flatMap(unit => unit.pages);
+  const orderedLessonIds = lessons.map(lesson => lesson.id);
+  const orderedPageIds = pages.map(page => page.id);
   const sorted = [...events].sort((a, b) => a.occurredAt.localeCompare(b.occurredAt));
   const completedLessonIds = [...new Set(sorted.filter(event => event.eventType === 'lesson_completed').map(event => event.payload.lessonId))];
   const completedPageIds = [...new Set(sorted.filter(event => event.eventType === 'page_completed' && event.payload.pageId).map(event => event.payload.pageId!))];
@@ -100,7 +98,7 @@ export function deriveSchoolProgress(events: SchoolLearningEvent[], selectedText
 
   return {
     textbookId: selectedTextbookId,
-    unitId: getTextbookPageById(currentPageId)?.unitId ?? getLessonById(currentLessonId)?.unitId ?? pepGrade4Upper.currentUnitId,
+    unitId: pages.find(page => page.id === currentPageId)?.unitId ?? lessons.find(lesson => lesson.id === currentLessonId)?.unitId ?? textbook.currentUnitId,
     completedLessonIds,
     currentLessonId,
     completedPageIds,

@@ -1,8 +1,7 @@
 import { BookOpen, CalendarDays } from 'lucide-react';
 import { useState } from 'react';
 import type { SchoolMasteryItem, SchoolProgressSummary } from '../../progress/schoolProgressSummary';
-import { getTextbookPageById } from '../../curriculum/pepGrade4UpperTextbookPages';
-import { getLessonById, getUnitById } from '../../curriculum/pepGrade4UpperUnit1';
+import { useContent } from '../../content/ContentProvider';
 import { Button } from '../ui/Button';
 import { Surface } from '../ui/Surface';
 
@@ -11,15 +10,17 @@ const labels: Record<Category, string> = { words: '单词', sentences: '句子',
 const shortDay = (day: string) => new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric' }).format(new Date(`${day}T12:00:00`));
 const longDay = (day: string) => new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric' }).format(new Date(`${day}T12:00:00`));
 
-const itemLocation = (item: SchoolMasteryItem) => {
-  const page = getTextbookPageById(item.lessonId);
+const formatItemLocation = (item: SchoolMasteryItem, content: ReturnType<typeof useContent>) => {
+  const page = content.getPage(item.lessonId);
   if (page) return `课本第 ${page.printedPage} 页 · ${page.chineseTitle}`;
-  const lesson = getLessonById(item.lessonId);
-  const unit = lesson ? getUnitById(lesson.unitId) : undefined;
+  const lesson = content.getLesson(item.lessonId);
+  const unit = lesson ? content.getUnit(lesson.unitId) : undefined;
   return unit && lesson ? `Unit ${unit.sequence} · ${unit.title} · 第 ${lesson.sequence} 课` : '校内同步教材';
 };
 
 export function SchoolGrowthRecord({ summary, onStartLearning }: { summary: SchoolProgressSummary; onStartLearning: () => void }) {
+  const content = useContent();
+  const itemLocation = (item: SchoolMasteryItem) => formatItemLocation(item, content);
   const [selectedDay, setSelectedDay] = useState(summary.days[0]?.day ?? summary.masteredItems[0]?.firstLearnedDay ?? '');
   const [category, setCategory] = useState<Category>('words');
   const items = {

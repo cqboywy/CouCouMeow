@@ -1,5 +1,4 @@
 import { createContext, type PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { pepGrade4Upper } from '../curriculum/pepGrade4UpperUnit1';
 import type { LearningEvent } from '../progress/learningEvents';
 import { importLegacyProgress } from './legacyProgressImport';
 import type { LearningProgressRepository } from './learningProgressRepository';
@@ -22,7 +21,7 @@ type LearningDataValue = InitializedLearningData & {
 
 const LearningDataContext = createContext<LearningDataValue | null>(null);
 
-export async function initializeLearningData(): Promise<InitializedLearningData> {
+export async function initializeLearningData(defaultTextbookId: string): Promise<InitializedLearningData> {
   const config = readSupabaseConfig(import.meta.env);
   const client = createSupabaseBrowserClient(config);
   const user = await ensureAuthenticatedUser(client.auth);
@@ -30,7 +29,7 @@ export async function initializeLearningData(): Promise<InitializedLearningData>
   await importLegacyProgress(window.localStorage, repository, user.id);
   let selectedTextbookId = await repository.getSelectedTextbookId();
   if (!selectedTextbookId) {
-    selectedTextbookId = pepGrade4Upper.id;
+    selectedTextbookId = defaultTextbookId;
     await repository.setSelectedTextbookId(selectedTextbookId);
   }
   const events = await repository.loadEvents();
@@ -72,7 +71,8 @@ export function LearningDataReadyProvider({
 export function LearningDataProvider({
   children,
   initialize = initializeLearningData,
-}: PropsWithChildren<{ initialize?: () => Promise<InitializedLearningData> }>) {
+  defaultTextbookId = '',
+}: PropsWithChildren<{ initialize?: (defaultTextbookId: string) => Promise<InitializedLearningData>; defaultTextbookId?: string }>) {
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<{ status: 'loading' | 'error' | 'ready'; data?: InitializedLearningData }>({ status: 'loading' });
   const activeAttempt = useRef(0);
@@ -81,14 +81,14 @@ export function LearningDataProvider({
     const sequence = activeAttempt.current + 1;
     activeAttempt.current = sequence;
     setState({ status: 'loading' });
-    const pending = initialization.current ?? initialize();
+    const pending = initialization.current ?? initialize(defaultTextbookId);
     initialization.current = pending;
     void pending.then(
       data => { if (activeAttempt.current === sequence) setState({ status: 'ready', data }); },
       () => { if (activeAttempt.current === sequence) setState({ status: 'error' }); },
     );
     return () => { if (activeAttempt.current === sequence) activeAttempt.current += 1; };
-  }, [initialize, attempt]);
+  }, [initialize, attempt, defaultTextbookId]);
 
   if (state.status === 'loading') return <main className="data-startup" role="status"><h1>凑凑喵英语乐园</h1><p>正在连接线上学习档案…</p></main>;
   if (state.status === 'error' || !state.data) return <main className="data-startup" role="alert"><h1>线上学习档案暂时没有准备好</h1><p>请检查网络连接，稍后再试。你的旧浏览器记录不会被删除。</p><button type="button" onClick={() => { initialization.current = null; setAttempt(value => value + 1); }}>重新连接</button></main>;

@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
+import { renderWithLearningData as render } from '../../test/renderWithLearningData';
 import { describe, expect, it, vi } from 'vitest';
 import type { GrowthSummary } from '../../progress/extraProgressSummary';
 import type { SchoolProgressSummary } from '../../progress/schoolProgressSummary';

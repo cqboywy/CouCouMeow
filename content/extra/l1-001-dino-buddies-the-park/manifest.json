@@ -1,0 +1,186 @@
+{
+  "kind": "extra_episode",
+  "schema_version": 1,
+  "content_version": 1,
+  "content_hash": "b777047ff489e0bab202dea8beed799fb99f99116937c8fc66598020c8c927d0",
+  "episode": {
+    "content_key": "l1-001-dino-buddies-the-park",
+    "level": 1,
+    "series_title": "Dino Buddies",
+    "episode_number": 1,
+    "title": "The Park",
+    "chinese_title": "恐龙伙伴：公园奇遇",
+    "local_video_filename": "001_Dino Buddies 1_The Park.mp4",
+    "local_srt_filename": null,
+    "media_provider": "local",
+    "media_locator": null,
+    "story_summary": "Rex 想在公园交朋友，却因为大家误会他而感到孤单。后来他发现一只恐龙的尾巴尖刺卡在树里，终于有机会用善意帮助朋友。",
+    "story_theme": "不要只凭外表判断别人。先认真听，再用善意帮助需要帮助的朋友。",
+    "comprehension_questions": [
+      "Rex 在哪里遇到了其他恐龙？",
+      "什么东西卡在了树里？"
+    ],
+    "retell_steps": [
+      "Rex 来到公园，想认识新朋友。",
+      "其他恐龙误会 Rex，害怕地跑开了。",
+      "Rex 发现朋友需要帮助。"
+    ],
+    "past_tense_pairs": [
+      {
+        "base": "see",
+        "past": "saw",
+        "meaning": "看见"
+      },
+      {
+        "base": "run",
+        "past": "ran",
+        "meaning": "跑"
+      },
+      {
+        "base": "say",
+        "past": "said",
+        "meaning": "说"
+      }
+    ]
+  },
+  "sentences": [
+    {
+      "content_key": "sentence-1",
+      "sequence_no": 1,
+      "english_text": "One day Rex was in the park.",
+      "chinese_translation": "一天，Rex 在公园里。",
+      "is_featured": true
+    },
+    {
+      "content_key": "sentence-2",
+      "sequence_no": 2,
+      "english_text": "He saw other dinosaurs.",
+      "chinese_translation": "他看到了其他恐龙。",
+      "is_featured": true
+    },
+    {
+      "content_key": "sentence-6",
+      "sequence_no": 3,
+      "english_text": "They ran away.",
+      "chinese_translation": "他们跑开了。",
+      "is_featured": true
+    },
+    {
+      "content_key": "sentence-8",
+      "sequence_no": 4,
+      "english_text": "Don't eat me!",
+      "chinese_translation": "别吃我！",
+      "is_featured": true
+    },
+    {
+      "content_key": "sentence-11",
+      "sequence_no": 5,
+      "english_text": "Nobody will be my friend.",
+      "chinese_translation": "没有人愿意做我的朋友。",
+      "is_featured": true
+    },
+    {
+      "content_key": "sentence-20",
+      "sequence_no": 6,
+      "english_text": "I won't eat you!",
+      "chinese_translation": "我不会吃你！",
+      "is_featured": true
+    },
+    {
+      "content_key": "sentence-24",
+      "sequence_no": 7,
+      "english_text": "I'm stuck!",
+      "chinese_translation": "我被卡住了！",
+      "is_featured": true
+    },
+    {
+      "content_key": "sentence-30",
+      "sequence_no": 8,
+      "english_text": "Can you please help me?",
+      "chinese_translation": "你可以帮帮我吗？",
+      "is_featured": true
+    }
+  ],
+  "vocab": [
+    {
+      "content_key": "vocab-park",
+      "sequence_no": 1,
+      "word": "park",
+      "phonetic": "/pɑːk/",
+      "chinese_meaning": "公园"
+    },
+    {
+      "content_key": "vocab-dinosaur",
+      "sequence_no": 2,
+      "word": "dinosaur",
+      "phonetic": "/ˈdaɪ.nə.sɔːr/",
+      "chinese_meaning": "恐龙"
+    },
+    {
+      "content_key": "vocab-other",
+      "sequence_no": 3,
+      "word": "other",
+      "phonetic": "/ˈʌð.ər/",
+      "chinese_meaning": "其他的"
+    },
+    {
+      "content_key": "vocab-run-away",
+      "sequence_no": 4,
+      "word": "run away",
+      "phonetic": "/rʌn əˈweɪ/",
+      "chinese_meaning": "跑开；逃走"
+    },
+    {
+      "content_key": "vocab-friend",
+      "sequence_no": 5,
+      "word": "friend",
+      "phonetic": "/frend/",
+      "chinese_meaning": "朋友"
+    },
+    {
+      "content_key": "vocab-afraid",
+      "sequence_no": 6,
+      "word": "afraid",
+      "phonetic": "/əˈfreɪd/",
+      "chinese_meaning": "害怕的"
+    },
+    {
+      "content_key": "vocab-stuck",
+      "sequence_no": 7,
+      "word": "stuck",
+      "phonetic": "/stʌk/",
+      "chinese_meaning": "被卡住的"
+    },
+    {
+      "content_key": "vocab-help",
+      "sequence_no": 8,
+      "word": "help",
+      "phonetic": "/help/",
+      "chinese_meaning": "帮助；救命"
+    }
+  ],
+  "knowledge": [
+    {
+      "content_key": "knowledge-1",
+      "sequence_no": 1,
+      "title": "主语 + was / were + 地点",
+      "grammar_explanation": "讲过去发生的故事时，用 was 或 were 表示某人当时在哪里。",
+      "core_knowledge": "讲过去发生的故事时，用 was 或 were 表示某人当时在哪里。",
+      "examples": [
+        "I was in the library.",
+        "We were in the playground."
+      ]
+    },
+    {
+      "content_key": "knowledge-2",
+      "sequence_no": 2,
+      "title": "Can you please + 动词原形?",
+      "grammar_explanation": "需要帮助时，用这个句式会更礼貌。",
+      "core_knowledge": "需要帮助时，用这个句式会更礼貌。",
+      "examples": [
+        "Can you please open the door?",
+        "Can you please help me?"
+      ]
+    }
+  ]
+}
